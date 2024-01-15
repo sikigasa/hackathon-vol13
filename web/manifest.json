@@ -1,6 +1,6 @@
 {
-    "name": "money_app",
-    "short_name": "money_app",
+    "name": "hackathon_vol13",
+    "short_name": "hackathon_vol13",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

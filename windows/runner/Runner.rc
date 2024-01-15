@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "money_app" "\0"
+            VALUE "FileDescription", "hackathon_vol13" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "money_app" "\0"
+            VALUE "InternalName", "hackathon_vol13" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "money_app.exe" "\0"
-            VALUE "ProductName", "money_app" "\0"
+            VALUE "OriginalFilename", "hackathon_vol13.exe" "\0"
+            VALUE "ProductName", "hackathon_vol13" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
