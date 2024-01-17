@@ -64,4 +64,8 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // 言語パッケージの依存関係の追加
+    implementation 'com.google.mlkit:text-recognition-japanese:16.0.0'
+}
