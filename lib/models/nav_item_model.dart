@@ -33,10 +33,10 @@ List<NavItemModel> bottomNavItems = [
     ),
   ),
   // NavItemModel(
-  //   title: 'Home-click',
+  //   title: 'Edit-Click',
   //   rive: RiveModel(
   //     src: 'assets/animated-icon-set.riv',
-  //     artboard: 'Home-CLICK',
+  //     artboard: 'Edit-CLICK',
   //     stateMachineName: 'State-machine',
   //   ),
   // ),

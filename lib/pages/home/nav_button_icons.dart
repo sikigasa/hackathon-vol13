@@ -4,12 +4,14 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/models/nav_item_model.dart';
+import 'package:hackathon_vol13/pages/input/input_page.dart';
 import 'package:rive/rive.dart';
 
 const Color buttonNavBgColor = Color(0xFF17203A);
 
 class ButtonNavWithIcons extends StatefulWidget {
-  const ButtonNavWithIcons({super.key});
+  final CameraDescription camera;
+  const ButtonNavWithIcons({super.key, required this.camera});
 
   @override
   State<ButtonNavWithIcons> createState() => _ButtonNavWithIconsState();
@@ -54,12 +56,26 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(child: Text(pages[selectedNavIndex])),
+      body: listwidget(pages: pages, selectedNavIndex: selectedNavIndex),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TakePictureScreen(
+                camera: widget.camera,
+              ),
+            ),
+          );
+        },
+        child: const Icon(Icons.add_rounded),
+        backgroundColor: Colors.blue,
+      ),
       bottomNavigationBar: SafeArea(
         child: Container(
           height: 66,
           padding: EdgeInsets.all(12),
-          margin: EdgeInsets.symmetric(horizontal: 24), //横幅
+          margin: EdgeInsets.symmetric(horizontal: 16), //横幅
           decoration: BoxDecoration(
             color: buttonNavBgColor.withOpacity(0.8),
             borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -115,6 +131,22 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
         ),
       ),
     );
+  }
+}
+
+class listwidget extends StatelessWidget {
+  const listwidget({
+    super.key,
+    required this.pages,
+    required this.selectedNavIndex,
+  });
+
+  final List<String> pages;
+  final int selectedNavIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text(pages[selectedNavIndex]));
   }
 }
 
