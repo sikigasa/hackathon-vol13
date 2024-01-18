@@ -9,35 +9,43 @@ class NavItemModel {
 
 List<NavItemModel> bottomNavItems = [
   NavItemModel(
+    title: 'Chat',
+    rive: RiveModel(
+      src: 'assets/animated-icons-color.riv',
+      artboard: 'CHAT',
+      stateMachineName: 'CHAT_Interactivity',
+    ),
+  ),
+  NavItemModel(
+    title: 'Search',
+    rive: RiveModel(
+      src: 'assets/animated-icons-color.riv',
+      artboard: 'SEARCH',
+      stateMachineName: 'SEARCH_Interactivity',
+    ),
+  ),
+  NavItemModel(
     title: 'Home',
     rive: RiveModel(
       src: 'assets/animated-icons-color.riv',
-      artboard: 'Home',
-      stateMachineName: 'State Machine 1',
+      artboard: 'HOME',
+      stateMachineName: 'HOME_interactivity',
     ),
   ),
+  // NavItemModel(
+  //   title: 'Home-click',
+  //   rive: RiveModel(
+  //     src: 'assets/animated-icon-set.riv',
+  //     artboard: 'Home-CLICK',
+  //     stateMachineName: 'State-machine',
+  //   ),
+  // ),
   NavItemModel(
-    title: 'Cameras',
+    title: 'Timer',
     rive: RiveModel(
       src: 'assets/animated-icons-color.riv',
-      artboard: 'Cameras',
-      stateMachineName: 'State Machine 1',
-    ),
-  ),
-  NavItemModel(
-    title: 'Gallery',
-    rive: RiveModel(
-      src: 'assets/animated-icons-color.riv',
-      artboard: 'Gallery',
-      stateMachineName: 'State Machine 1',
-    ),
-  ),
-  NavItemModel(
-    title: 'Settings',
-    rive: RiveModel(
-      src: 'assets/animated-icons-color.riv',
-      artboard: 'Settings',
-      stateMachineName: 'State Machine 1',
+      artboard: 'TIMER',
+      stateMachineName: 'TIMER_Interactivity',
     ),
   ),
 ];

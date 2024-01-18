@@ -16,6 +16,29 @@ class ButtonNavWithIcons extends StatefulWidget {
 }
 
 class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
+  List<SMIBool> riveIconInputs = [];
+
+  void animateIcon(int index) {
+    riveIconInputs[index].change(true);
+    Future.delayed(Duration(milliseconds: 800), () {
+      riveIconInputs[index].change(false);
+    });
+  }
+
+  void riveOnInit(Artboard artboard, {required String stateMachineName}) {
+    StateMachineController? controller =
+        StateMachineController.fromArtboard(artboard, stateMachineName);
+    if (controller != null) {
+      artboard.addController(controller);
+      riveIconInputs.add(controller.findInput<bool>('active') as SMIBool);
+    } else {
+      controller =
+          StateMachineController.fromArtboard(artboard, 'TIME_Interactivity');
+      artboard.addController(controller!);
+      riveIconInputs.add(controller.findInput<bool>('active') as SMIBool);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,16 +60,29 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
             ],
           ),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(
               bottomNavItems.length,
-              (index) => SizedBox(
-                width: 36,
-                height: 36,
-                child: RiveAnimation.asset(
-                  bottomNavItems[index].rive.src,
-                  artboard: bottomNavItems[index].rive.artboard,
-                ),
-              ),
+              (index) {
+                final riveIcon = bottomNavItems[index].rive;
+                return GestureDetector(
+                  onTap: () {
+                    animateIcon(index);
+                  },
+                  child: SizedBox(
+                    width: 36,
+                    height: 36,
+                    child: RiveAnimation.asset(
+                      riveIcon.src,
+                      artboard: riveIcon.artboard,
+                      onInit: (artboard) {
+                        riveOnInit(artboard,
+                            stateMachineName: riveIcon.stateMachineName);
+                      },
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ),
