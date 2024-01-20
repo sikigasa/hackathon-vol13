@@ -1,77 +1,49 @@
-// import 'dart:io';
+import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
-// import 'package:camera/camera.dart';
-// import 'package:google_mlkit_commons/google_mlkit_commons.dart';
-// import 'package:flutter/services.dart';
+InputImage convert({
+  required CameraDescription camera,
+  required CameraImage cameraImage,
+}) {
+  final WriteBuffer allBytes = WriteBuffer();
+  for (Plane plane in cameraImage.planes) {
+    allBytes.putUint8List(plane.bytes);
+  }
+  final bytes = allBytes.done().buffer.asUint8List();
 
-// final camera; // your camera instance
-// final controller = CameraController(
-//   camera,
-//   ResolutionPreset.max,
-//   enableAudio: false,
-//   imageFormatGroup: Platform.isAndroid
-//           ? ImageFormatGroup.nv21 // for Android
-//           : ImageFormatGroup.bgra8888, // for iOS
-// );
+  final Size imageSize =
+      Size(cameraImage.width.toDouble(), cameraImage.height.toDouble());
 
-// final _orientations = {
-//   DeviceOrientation.portraitUp: 0,
-//   DeviceOrientation.landscapeLeft: 90,
-//   DeviceOrientation.portraitDown: 180,
-//   DeviceOrientation.landscapeRight: 270,
-// };
+  final InputImageRotation imageRotation =
+      InputImageRotationValue.fromRawValue(camera.sensorOrientation) ??
+          InputImageRotation.rotation0deg;
 
-// InputImage? _inputImageFromCameraImage(CameraImage image) {
-//   // get image rotation
-//   // it is used in android to convert the InputImage from Dart to Java
-//   // `rotation` is not used in iOS to convert the InputImage from Dart to Obj-C
-//   // in both platforms `rotation` and `camera.lensDirection` can be used to compensate `x` and `y` coordinates on a canvas
-//   final camera = _cameras[_cameraIndex];
-//   final sensorOrientation = camera.sensorOrientation;
-//   InputImageRotation? rotation;
-//   if (Platform.isIOS) {
-//     rotation = InputImageRotationValue.fromRawValue(sensorOrientation);
-//   } else if (Platform.isAndroid) {
-//     var rotationCompensation =
-//         _orientations[_controller!.value.deviceOrientation];
-//     if (rotationCompensation == null) return null;
-//     if (camera.lensDirection == CameraLensDirection.front) {
-//       // front-facing
-//       rotationCompensation = (sensorOrientation + rotationCompensation) % 360;
-//     } else {
-//       // back-facing
-//       rotationCompensation =
-//           (sensorOrientation - rotationCompensation + 360) % 360;
-//     }
-//     rotation = InputImageRotationValue.fromRawValue(rotationCompensation);
-//   }
-//   if (rotation == null) return null;
+  final InputImageFormat inputImageFormat =
+      InputImageFormatValue.fromRawValue(cameraImage.format.raw) ??
+          InputImageFormat.nv21;
 
-//   // get image format
-//   final format = InputImageFormatValue.fromRawValue(image.format.raw);
-//   // validate format depending on platform
-//   // only supported formats:
-//   // * nv21 for Android
-//   // * bgra8888 for iOS
-//   if (format == null ||
-//           (Platform.isAndroid && format != InputImageFormat.nv21) ||
-//           (Platform.isIOS && format != InputImageFormat.bgra8888)) return null;
+  // final planeData = cameraImage.planes.map(
+  //   (Plane plane) {
+  //     return InputImageMetadata(
+  //       bytesPerRow: plane.bytesPerRow,
+  //       height: plane.height,
+  //       width: plane.width,
+  //     );
+  //   },
+  // ).toList();
 
-//   // since format is constraint to nv21 or bgra8888, both only have one plane
-//   if (image.planes.length != 1) return null;
-//   final plane = image.planes.first;
+  final inputImageData = InputImageMetadata(
+    size: imageSize,
+    rotation: imageRotation,
+    format: inputImageFormat,
+    bytesPerRow: cameraImage.planes[0].bytesPerRow,
+    // planeData: planeData,
+  );
 
-//   // compose InputImage using bytes
-//   return InputImage.fromBytes(
-//     bytes: plane.bytes,
-//     metadata: InputImageMetadata(
-//       size: Size(image.width.toDouble(), image.height.toDouble()),
-//       rotation: rotation, // used only in Android
-//       format: format, // used only in iOS
-//       bytesPerRow: plane.bytesPerRow, // used only in iOS
-//     ),
-//   );
-// }
+  final inputImage =
+      InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
 
-// CameraImage image; // your image from camera/controller image stream
-// final inputImage = _inputImageFromCameraImage(image);
+  return inputImage;
+}
