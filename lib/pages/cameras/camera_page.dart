@@ -104,7 +104,7 @@ class _CameraState extends State<CameraPage> {
                   Padding(
                       padding: const EdgeInsets.all(20),
                       child: AspectRatio(
-                        aspectRatio: 12 / 9,
+                        aspectRatio: 16 / 12,
                         child: Stack(
                           children: [
                             ClipRect(
