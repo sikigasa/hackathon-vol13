@@ -9,11 +9,11 @@ class $AmountTypesTable extends AmountTypes
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $AmountTypesTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _priceTypeIdMeta =
-      const VerificationMeta('priceTypeId');
+  static const VerificationMeta _amountTypeIdMeta =
+      const VerificationMeta('amountTypeId');
   @override
-  late final GeneratedColumn<int> priceTypeId = GeneratedColumn<int>(
-      'price_type_id', aliasedName, false,
+  late final GeneratedColumn<int> amountTypeId = GeneratedColumn<int>(
+      'amount_type_id', aliasedName, false,
       hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
@@ -28,7 +28,7 @@ class $AmountTypesTable extends AmountTypes
       type: DriftSqlType.string,
       requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [priceTypeId, title];
+  List<GeneratedColumn> get $columns => [amountTypeId, title];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -39,11 +39,11 @@ class $AmountTypesTable extends AmountTypes
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('price_type_id')) {
+    if (data.containsKey('amount_type_id')) {
       context.handle(
-          _priceTypeIdMeta,
-          priceTypeId.isAcceptableOrUnknown(
-              data['price_type_id']!, _priceTypeIdMeta));
+          _amountTypeIdMeta,
+          amountTypeId.isAcceptableOrUnknown(
+              data['amount_type_id']!, _amountTypeIdMeta));
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -55,13 +55,13 @@ class $AmountTypesTable extends AmountTypes
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {priceTypeId};
+  Set<GeneratedColumn> get $primaryKey => {amountTypeId};
   @override
   AmountType map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return AmountType(
-      priceTypeId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}price_type_id'])!,
+      amountTypeId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount_type_id'])!,
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
     );
@@ -74,20 +74,20 @@ class $AmountTypesTable extends AmountTypes
 }
 
 class AmountType extends DataClass implements Insertable<AmountType> {
-  final int priceTypeId;
+  final int amountTypeId;
   final String title;
-  const AmountType({required this.priceTypeId, required this.title});
+  const AmountType({required this.amountTypeId, required this.title});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['price_type_id'] = Variable<int>(priceTypeId);
+    map['amount_type_id'] = Variable<int>(amountTypeId);
     map['title'] = Variable<String>(title);
     return map;
   }
 
   AmountTypesCompanion toCompanion(bool nullToAbsent) {
     return AmountTypesCompanion(
-      priceTypeId: Value(priceTypeId),
+      amountTypeId: Value(amountTypeId),
       title: Value(title),
     );
   }
@@ -96,7 +96,7 @@ class AmountType extends DataClass implements Insertable<AmountType> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AmountType(
-      priceTypeId: serializer.fromJson<int>(json['priceTypeId']),
+      amountTypeId: serializer.fromJson<int>(json['amountTypeId']),
       title: serializer.fromJson<String>(json['title']),
     );
   }
@@ -104,59 +104,59 @@ class AmountType extends DataClass implements Insertable<AmountType> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'priceTypeId': serializer.toJson<int>(priceTypeId),
+      'amountTypeId': serializer.toJson<int>(amountTypeId),
       'title': serializer.toJson<String>(title),
     };
   }
 
-  AmountType copyWith({int? priceTypeId, String? title}) => AmountType(
-        priceTypeId: priceTypeId ?? this.priceTypeId,
+  AmountType copyWith({int? amountTypeId, String? title}) => AmountType(
+        amountTypeId: amountTypeId ?? this.amountTypeId,
         title: title ?? this.title,
       );
   @override
   String toString() {
     return (StringBuffer('AmountType(')
-          ..write('priceTypeId: $priceTypeId, ')
+          ..write('amountTypeId: $amountTypeId, ')
           ..write('title: $title')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(priceTypeId, title);
+  int get hashCode => Object.hash(amountTypeId, title);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AmountType &&
-          other.priceTypeId == this.priceTypeId &&
+          other.amountTypeId == this.amountTypeId &&
           other.title == this.title);
 }
 
 class AmountTypesCompanion extends UpdateCompanion<AmountType> {
-  final Value<int> priceTypeId;
+  final Value<int> amountTypeId;
   final Value<String> title;
   const AmountTypesCompanion({
-    this.priceTypeId = const Value.absent(),
+    this.amountTypeId = const Value.absent(),
     this.title = const Value.absent(),
   });
   AmountTypesCompanion.insert({
-    this.priceTypeId = const Value.absent(),
+    this.amountTypeId = const Value.absent(),
     required String title,
   }) : title = Value(title);
   static Insertable<AmountType> custom({
-    Expression<int>? priceTypeId,
+    Expression<int>? amountTypeId,
     Expression<String>? title,
   }) {
     return RawValuesInsertable({
-      if (priceTypeId != null) 'price_type_id': priceTypeId,
+      if (amountTypeId != null) 'amount_type_id': amountTypeId,
       if (title != null) 'title': title,
     });
   }
 
   AmountTypesCompanion copyWith(
-      {Value<int>? priceTypeId, Value<String>? title}) {
+      {Value<int>? amountTypeId, Value<String>? title}) {
     return AmountTypesCompanion(
-      priceTypeId: priceTypeId ?? this.priceTypeId,
+      amountTypeId: amountTypeId ?? this.amountTypeId,
       title: title ?? this.title,
     );
   }
@@ -164,8 +164,8 @@ class AmountTypesCompanion extends UpdateCompanion<AmountType> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (priceTypeId.present) {
-      map['price_type_id'] = Variable<int>(priceTypeId.value);
+    if (amountTypeId.present) {
+      map['amount_type_id'] = Variable<int>(amountTypeId.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -176,7 +176,7 @@ class AmountTypesCompanion extends UpdateCompanion<AmountType> {
   @override
   String toString() {
     return (StringBuffer('AmountTypesCompanion(')
-          ..write('priceTypeId: $priceTypeId, ')
+          ..write('amountTypeId: $amountTypeId, ')
           ..write('title: $title')
           ..write(')'))
         .toString();
@@ -211,7 +211,7 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       defaultConstraints: GeneratedColumn.constraintIsAlways(
-          'REFERENCES amount_types (price_type_id)'));
+          'REFERENCES amount_types (amount_type_id)'));
   @override
   List<GeneratedColumn> get $columns => [walletId, amount, amountTypeId];
   @override

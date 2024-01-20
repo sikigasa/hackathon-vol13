@@ -11,12 +11,12 @@ class Wallets extends Table {
   IntColumn get walletId => integer().autoIncrement()();
   IntColumn get amount => integer()();
   IntColumn get amountTypeId =>
-      integer().references(AmountTypes, #priceTypeId)();
+      integer().references(AmountTypes, #amountTypeId)();
 }
 
 // @DataClassName('PriceType')
 class AmountTypes extends Table {
-  IntColumn get priceTypeId => integer().autoIncrement()();
+  IntColumn get amountTypeId => integer().autoIncrement()();
   TextColumn get title => text().withLength(min: 1, max: 50)();
 }
 
@@ -26,6 +26,21 @@ class AppDatabase extends _$AppDatabase {
   // データベースのスキーマバージョンを返す。現在は1。
   int get schemaVersion => 1;
   MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) async {
+          await m.createAll();
+          final database = AppDatabase();
+          await into(database.amountTypes)
+              .insert(AmountType(amountTypeId: 0, title: "wallet"));
+          await into(database.amountTypes)
+              .insert(AmountType(amountTypeId: 1, title: "bank"));
+          await into(database.amountTypes)
+              .insert(AmountType(amountTypeId: 2, title: "card"));
+        },
+        // onUpgrade: (m, from, to) async {
+        //   if (from == 1) {
+        //     await m.alterTable(TableMigration(AmountTypes));
+        //   }
+        // },
         beforeOpen: (details) async {
           await customStatement('PRAGMA foreign_keys = ON');
         },
