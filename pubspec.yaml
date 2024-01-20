@@ -41,6 +41,7 @@ dependencies:
   permission_handler: ^11.2.0
   rive: ^0.12.4
   sqflite: ^2.3.0
+  fl_chart: ^0.66.0
 
 dev_dependencies:
   flutter_test:
