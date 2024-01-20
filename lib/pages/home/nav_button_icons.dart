@@ -4,6 +4,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/models/nav_item_model.dart';
 import 'package:hackathon_vol13/pages/input/input_page.dart';
+import 'package:hackathon_vol13/pages/home/home_page.dart';
+import 'package:hackathon_vol13/pages/home/settings_page.dart';
 import 'package:rive/rive.dart';
 
 const Color buttonNavBgColor = Color(0xFF17203A);
@@ -21,10 +23,19 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
   List<StateMachineController?> controllers = [];
   int selectedNavIndex = 0;
   List<String> pages = [
-    'Chat',
-    'Search',
-    'Home',
-    'Timer',
+    // HomePage(),
+    "Home",
+    "Input",
+    "Camera",
+    "Profile",
+    "Settings",
+  ];
+  List<WidgetBuilder> _pageOptions = [
+    (BuildContext context) => HomePage(),
+    (BuildContext context) => HomePage(),
+    (BuildContext context) => HomePage(),
+    (BuildContext context) => HomePage(),
+    (BuildContext context) => SettingsPage(),
   ];
 
   void animateIcon(int index) {
@@ -55,7 +66,7 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: listwidget(pages: pages, selectedNavIndex: selectedNavIndex),
+      body: _pageOptions[selectedNavIndex](context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -133,21 +144,21 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
   }
 }
 
-class listwidget extends StatelessWidget {
-  const listwidget({
-    super.key,
-    required this.pages,
-    required this.selectedNavIndex,
-  });
+// class listwidget extends StatelessWidget {
+//   const listwidget({
+//     super.key,
+//     required this.pages,
+//     required this.selectedNavIndex,
+//   });
 
-  final List<String> pages;
-  final int selectedNavIndex;
+//   final List<String> pages;
+//   final int selectedNavIndex;
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text(pages[selectedNavIndex]));
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(child: Text(pages[selectedNavIndex]));
+//   }
+// }
 
 class AnimatedBar extends StatelessWidget {
   const AnimatedBar({
@@ -165,7 +176,7 @@ class AnimatedBar extends StatelessWidget {
       height: 4,
       width: isActive ? 20 : 0,
       decoration: BoxDecoration(
-        color: Color(0xFF17203A),
+        color: Color.fromARGB(255, 61, 77, 126),
         borderRadius: BorderRadius.all(Radius.circular(6)),
       ),
     );
