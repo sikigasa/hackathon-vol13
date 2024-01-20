@@ -40,8 +40,13 @@ dependencies:
   google_mlkit_text_recognition: ^0.11.0
   permission_handler: ^11.2.0
   rive: ^0.12.4
-  sqflite: ^2.3.0
   fl_chart: ^0.66.0
+  drift: ^2.15.0
+  sqlite3_flutter_libs: ^0.5.19+1
+  path_provider: ^2.1.2
+  path: ^1.8.3
+  build_runner: ^2.4.8
+  drift_dev: ^2.15.0
 
 dev_dependencies:
   flutter_test:
