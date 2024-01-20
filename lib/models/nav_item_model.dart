@@ -48,4 +48,12 @@ List<NavItemModel> bottomNavItems = [
       stateMachineName: 'TIMER_Interactivity',
     ),
   ),
+  NavItemModel(
+    title: 'Settings',
+    rive: RiveModel(
+      src: 'assets/animated-icons-color.riv',
+      artboard: 'SETTINGS',
+      stateMachineName: 'SETTINGS_Interactivity',
+    ),
+  ),
 ];

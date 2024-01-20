@@ -1,17 +1,19 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:camera/camera.dart';
+// import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/models/nav_item_model.dart';
 import 'package:hackathon_vol13/pages/input/input_page.dart';
+import 'package:hackathon_vol13/pages/home/home_page.dart';
+import 'package:hackathon_vol13/pages/home/settings_page.dart';
+import 'package:hackathon_vol13/database/wallet.dart';
 import 'package:rive/rive.dart';
 
 const Color buttonNavBgColor = Color(0xFF17203A);
 
 class ButtonNavWithIcons extends StatefulWidget {
-  final CameraDescription camera;
-  const ButtonNavWithIcons({super.key, required this.camera});
+  final AppDatabase database;
+  const ButtonNavWithIcons({super.key, required this.database});
 
   @override
   State<ButtonNavWithIcons> createState() => _ButtonNavWithIconsState();
@@ -22,10 +24,12 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
   List<StateMachineController?> controllers = [];
   int selectedNavIndex = 0;
   List<String> pages = [
-    'Chat',
-    'Search',
-    'Home',
-    'Timer',
+    // HomePage(),
+    "Home",
+    "Input",
+    "Camera",
+    "Profile",
+    "Settings",
   ];
 
   void animateIcon(int index) {
@@ -55,21 +59,35 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
 
   @override
   Widget build(BuildContext context) {
+    List<WidgetBuilder> _pageOptions = [
+      (BuildContext context) => HomePage(
+            database: widget.database,
+          ),
+      (BuildContext context) => HomePage(
+            database: widget.database,
+          ),
+      (BuildContext context) => HomePage(
+            database: widget.database,
+          ),
+      (BuildContext context) => HomePage(
+            database: widget.database,
+          ),
+      (BuildContext context) => SettingsPage(),
+    ];
+
     return Scaffold(
-      body: listwidget(pages: pages, selectedNavIndex: selectedNavIndex),
+      body: _pageOptions[selectedNavIndex](context),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TakePictureScreen(
-                camera: widget.camera,
-              ),
+              builder: (context) => TakePictureScreen(),
             ),
           );
         },
-        child: const Icon(Icons.add_rounded),
         backgroundColor: Colors.blue,
+        child: const Icon(Icons.add_rounded),
       ),
       bottomNavigationBar: SafeArea(
         child: Container(
@@ -134,21 +152,21 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
   }
 }
 
-class listwidget extends StatelessWidget {
-  const listwidget({
-    super.key,
-    required this.pages,
-    required this.selectedNavIndex,
-  });
+// class listwidget extends StatelessWidget {
+//   const listwidget({
+//     super.key,
+//     required this.pages,
+//     required this.selectedNavIndex,
+//   });
 
-  final List<String> pages;
-  final int selectedNavIndex;
+//   final List<String> pages;
+//   final int selectedNavIndex;
 
-  @override
-  Widget build(BuildContext context) {
-    return Center(child: Text(pages[selectedNavIndex]));
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(child: Text(pages[selectedNavIndex]));
+//   }
+// }
 
 class AnimatedBar extends StatelessWidget {
   const AnimatedBar({
@@ -166,7 +184,7 @@ class AnimatedBar extends StatelessWidget {
       height: 4,
       width: isActive ? 20 : 0,
       decoration: BoxDecoration(
-        color: Color(0xFF17203A),
+        color: Color.fromARGB(255, 61, 77, 126),
         borderRadius: BorderRadius.all(Radius.circular(6)),
       ),
     );
