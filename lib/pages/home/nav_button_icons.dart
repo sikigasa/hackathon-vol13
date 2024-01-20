@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:camera/camera.dart';
+// import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/models/nav_item_model.dart';
 import 'package:hackathon_vol13/pages/input/input_page.dart';
@@ -31,13 +31,6 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
     "Profile",
     "Settings",
   ];
-  List<WidgetBuilder> _pageOptions = [
-    (BuildContext context) => HomePage(),
-    (BuildContext context) => HomePage(),
-    (BuildContext context) => HomePage(),
-    (BuildContext context) => HomePage(),
-    (BuildContext context) => SettingsPage(),
-  ];
 
   void animateIcon(int index) {
     riveIconInputs[index].change(true);
@@ -66,6 +59,22 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
 
   @override
   Widget build(BuildContext context) {
+    List<WidgetBuilder> _pageOptions = [
+      (BuildContext context) => HomePage(
+            database: widget.database,
+          ),
+      (BuildContext context) => HomePage(
+            database: widget.database,
+          ),
+      (BuildContext context) => HomePage(
+            database: widget.database,
+          ),
+      (BuildContext context) => HomePage(
+            database: widget.database,
+          ),
+      (BuildContext context) => SettingsPage(),
+    ];
+
     return Scaffold(
       body: _pageOptions[selectedNavIndex](context),
       floatingActionButton: FloatingActionButton(

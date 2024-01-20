@@ -3,8 +3,8 @@ import 'package:hackathon_vol13/pages/home/wallet.dart';
 import 'package:hackathon_vol13/database/wallet.dart';
 
 class HomePage extends StatefulWidget {
-  // final AppDatabase database;
-  const HomePage({super.key});
+  final AppDatabase database;
+  const HomePage({super.key, required this.database});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -56,8 +56,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       drawerScrimColor: Color.fromARGB(219, 89, 0, 255),
       body: TabBarView(
         controller: _tabController,
-        children: const <Widget>[
-          WalletPage(),
+        children: <Widget>[
+          WalletPage(
+            database: widget.database,
+          ),
           Center(
             child: Text("It's rainy here"),
           ),
