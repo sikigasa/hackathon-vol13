@@ -20,7 +20,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   // late CameraController _controller;
   // late Future<void> _initializeControllerFuture;
 
-  @override
+  // @override
   // void initState() {
   //   super.initState();
   //   // To display the current output from the Camera,
@@ -47,21 +47,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Take a picture')),
-      // You must wait until the controller is initialized before displaying the
-      // camera preview. Use a FutureBuilder to display a loading spinner until the
-      // controller has finished initializing.
-      // body: FutureBuilder<void>(
-      //   future: _initializeControllerFuture,
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.done) {
-      //       // If the Future is complete, display the preview.
-      //       return CameraPreview(_controller);
-      //     } else {
-      //       // Otherwise, display a loading indicator.
-      //       return const Center(child: CircularProgressIndicator());
-      //     }
-      //   },
-      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -73,41 +58,81 @@ class TakePictureScreenState extends State<TakePictureScreen> {
             ),
           );
         },
-        child: const Icon(Icons.add_rounded),
         backgroundColor: Colors.blue,
+        child: const Icon(Icons.camera_alt_outlined),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   // Provide an onPressed callback.
-      //   onPressed: () async {
-      //     // Take the Picture in a try / catch block. If anything goes wrong,
-      //     // catch the error.
-      //     try {
-      //       // Ensure that the camera is initialized.
-      //       await _initializeControllerFuture;
-
-      //       // Attempt to take a picture and get the file `image`
-      //       // where it was saved.
-      //       final image = await _controller.takePicture();
-
-      //       if (!mounted) return;
-
-      //       // If the picture was taken, display it on a new screen.
-      //       await Navigator.of(context).push(
-      //         MaterialPageRoute(
-      //           builder: (context) => DisplayPictureScreen(
-      //             // Pass the automatically generated path to
-      //             // the DisplayPictureScreen widget.
-      //             imagePath: image.path,
-      //           ),
+      body: InputForm(),
+      // SizedBox(
+      //   width: double.infinity,
+      //   child: Column(
+      //     children: <Widget>[
+      //       // TextField(),
+      //       Padding(
+      //         padding: const EdgeInsets.all(8.0),
+      //         child: Text("Input yor price"),
+      //       ),
+      //       TextFormField(
+      //         decoration: const InputDecoration(
+      //           hintText: 'Enter your price',
       //         ),
-      //       );
-      //     } catch (e) {
-      //       // If an error occurs, log the error to the console.
-      //       print(e);
-      //     }
-      //   },
-      //   child: const Icon(Icons.camera_alt),
+      //         validator: (String? value) {
+      //           if (value == null || value.isEmpty) {
+      //             return 'Please enter some text';
+      //           }
+      //           return null;
+      //         },
+      //       ),
+      //     ],
+      //   ),
       // ),
+    );
+  }
+}
+
+class InputForm extends StatefulWidget {
+  const InputForm({super.key});
+
+  @override
+  State<InputForm> createState() => _InputFormState();
+}
+
+class _InputFormState extends State<InputForm> {
+  final _formKey = GlobalKey<FormState>();
+  final items = ["item1", "item2", "item3"];
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            initialValue: "item1",
+            decoration: const InputDecoration(
+              hintText: 'Enter price',
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter some price';
+              }
+              return null;
+            },
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                // Validate will return true if the form is valid, or false if
+                // the form is invalid.
+                if (_formKey.currentState!.validate()) {
+                  // Process data.
+                }
+              },
+              child: const Text('Submit'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -128,18 +153,3 @@ class DisplayPictureScreen extends StatelessWidget {
     );
   }
 }
-
-  
-//   // Obtain a list of the available cameras on the device.
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Input Page'),
-//       ),
-//       body: Center(
-//         child: Text('Input Page'),
-//       ),
-//     );
-//   }
-// }
