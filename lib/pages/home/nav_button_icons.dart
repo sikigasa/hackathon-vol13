@@ -6,13 +6,14 @@ import 'package:hackathon_vol13/models/nav_item_model.dart';
 import 'package:hackathon_vol13/pages/input/input_page.dart';
 import 'package:hackathon_vol13/pages/home/home_page.dart';
 import 'package:hackathon_vol13/pages/home/settings_page.dart';
+import 'package:hackathon_vol13/database/wallet.dart';
 import 'package:rive/rive.dart';
 
 const Color buttonNavBgColor = Color(0xFF17203A);
 
 class ButtonNavWithIcons extends StatefulWidget {
-  final CameraDescription camera;
-  const ButtonNavWithIcons({super.key, required this.camera});
+  final AppDatabase database;
+  const ButtonNavWithIcons({super.key, required this.database});
 
   @override
   State<ButtonNavWithIcons> createState() => _ButtonNavWithIconsState();
@@ -72,9 +73,7 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TakePictureScreen(
-                camera: widget.camera,
-              ),
+              builder: (context) => TakePictureScreen(),
             ),
           );
         },

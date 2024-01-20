@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/pages/home/wallet.dart';
+import 'package:hackathon_vol13/database/wallet.dart';
 
 class HomePage extends StatefulWidget {
+  // final AppDatabase database;
   const HomePage({super.key});
 
   @override
@@ -55,7 +57,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: const <Widget>[
-          Wallet(),
+          WalletPage(),
           Center(
             child: Text("It's rainy here"),
           ),
