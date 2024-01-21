@@ -82,7 +82,9 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TakePictureScreen(),
+              builder: (context) => TakePictureScreen(
+                database: widget.database,
+              ),
             ),
           );
         },
