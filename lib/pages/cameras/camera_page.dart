@@ -119,15 +119,31 @@ class _CameraState extends State<CameraPage> {
                         ),
                       )),
                   isScanned
-                      ? ElevatedButton(
-                          child: const Text('再度読み取る'),
-                          onPressed: () {
-                            setState(() {
-                              isScanned = false;
-                              _recognizedText = null;
-                            });
-                            _controller.startImageStream(_processImage);
-                          },
+                      ? Center(
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              children: [
+                                ElevatedButton(
+                                  child: const Text('再度読み取る'),
+                                  onPressed: () {
+                                    setState(() {
+                                      isScanned = false;
+                                      _recognizedText = null;
+                                    });
+                                    _controller.startImageStream(_processImage);
+                                  },
+                                ),
+                                ElevatedButton(
+                                  child: const Text('登録する'),
+                                  onPressed: () {
+                                    Navigator.pop(
+                                        context, _recognizedText!.text);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
                         )
                       : const Text('読み込み中'),
                   Expanded(
