@@ -8,7 +8,7 @@ part 'wallet.g.dart';
 
 // @DataClassName('Wallet')
 class Wallets extends Table {
-  IntColumn get walletId => integer().autoIncrement()();
+  TextColumn get walletId => text().unique()();
   IntColumn get amount => integer()();
   IntColumn get amountTypeId =>
       integer().references(AmountTypes, #amountTypeId)();
@@ -25,6 +25,7 @@ class AppDatabase extends _$AppDatabase {
   @override
   // データベースのスキーマバージョンを返す。現在は1。
   int get schemaVersion => 1;
+  @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (m) async {
           await m.createAll();

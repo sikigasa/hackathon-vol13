@@ -191,13 +191,11 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
   static const VerificationMeta _walletIdMeta =
       const VerificationMeta('walletId');
   @override
-  late final GeneratedColumn<int> walletId = GeneratedColumn<int>(
+  late final GeneratedColumn<String> walletId = GeneratedColumn<String>(
       'wallet_id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
   late final GeneratedColumn<int> amount = GeneratedColumn<int>(
@@ -227,6 +225,8 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
     if (data.containsKey('wallet_id')) {
       context.handle(_walletIdMeta,
           walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta));
+    } else if (isInserting) {
+      context.missing(_walletIdMeta);
     }
     if (data.containsKey('amount')) {
       context.handle(_amountMeta,
@@ -246,13 +246,13 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {walletId};
+  Set<GeneratedColumn> get $primaryKey => const {};
   @override
   Wallet map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Wallet(
       walletId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}wallet_id'])!,
+          .read(DriftSqlType.string, data['${effectivePrefix}wallet_id'])!,
       amount: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
       amountTypeId: attachedDatabase.typeMapping
@@ -267,7 +267,7 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
 }
 
 class Wallet extends DataClass implements Insertable<Wallet> {
-  final int walletId;
+  final String walletId;
   final int amount;
   final int amountTypeId;
   const Wallet(
@@ -277,7 +277,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['wallet_id'] = Variable<int>(walletId);
+    map['wallet_id'] = Variable<String>(walletId);
     map['amount'] = Variable<int>(amount);
     map['amount_type_id'] = Variable<int>(amountTypeId);
     return map;
@@ -295,7 +295,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Wallet(
-      walletId: serializer.fromJson<int>(json['walletId']),
+      walletId: serializer.fromJson<String>(json['walletId']),
       amount: serializer.fromJson<int>(json['amount']),
       amountTypeId: serializer.fromJson<int>(json['amountTypeId']),
     );
@@ -304,13 +304,13 @@ class Wallet extends DataClass implements Insertable<Wallet> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'walletId': serializer.toJson<int>(walletId),
+      'walletId': serializer.toJson<String>(walletId),
       'amount': serializer.toJson<int>(amount),
       'amountTypeId': serializer.toJson<int>(amountTypeId),
     };
   }
 
-  Wallet copyWith({int? walletId, int? amount, int? amountTypeId}) => Wallet(
+  Wallet copyWith({String? walletId, int? amount, int? amountTypeId}) => Wallet(
         walletId: walletId ?? this.walletId,
         amount: amount ?? this.amount,
         amountTypeId: amountTypeId ?? this.amountTypeId,
@@ -337,38 +337,48 @@ class Wallet extends DataClass implements Insertable<Wallet> {
 }
 
 class WalletsCompanion extends UpdateCompanion<Wallet> {
-  final Value<int> walletId;
+  final Value<String> walletId;
   final Value<int> amount;
   final Value<int> amountTypeId;
+  final Value<int> rowid;
   const WalletsCompanion({
     this.walletId = const Value.absent(),
     this.amount = const Value.absent(),
     this.amountTypeId = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   WalletsCompanion.insert({
-    this.walletId = const Value.absent(),
+    required String walletId,
     required int amount,
     required int amountTypeId,
-  })  : amount = Value(amount),
+    this.rowid = const Value.absent(),
+  })  : walletId = Value(walletId),
+        amount = Value(amount),
         amountTypeId = Value(amountTypeId);
   static Insertable<Wallet> custom({
-    Expression<int>? walletId,
+    Expression<String>? walletId,
     Expression<int>? amount,
     Expression<int>? amountTypeId,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (walletId != null) 'wallet_id': walletId,
       if (amount != null) 'amount': amount,
       if (amountTypeId != null) 'amount_type_id': amountTypeId,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   WalletsCompanion copyWith(
-      {Value<int>? walletId, Value<int>? amount, Value<int>? amountTypeId}) {
+      {Value<String>? walletId,
+      Value<int>? amount,
+      Value<int>? amountTypeId,
+      Value<int>? rowid}) {
     return WalletsCompanion(
       walletId: walletId ?? this.walletId,
       amount: amount ?? this.amount,
       amountTypeId: amountTypeId ?? this.amountTypeId,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -376,13 +386,16 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (walletId.present) {
-      map['wallet_id'] = Variable<int>(walletId.value);
+      map['wallet_id'] = Variable<String>(walletId.value);
     }
     if (amount.present) {
       map['amount'] = Variable<int>(amount.value);
     }
     if (amountTypeId.present) {
       map['amount_type_id'] = Variable<int>(amountTypeId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
     }
     return map;
   }
@@ -392,7 +405,8 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     return (StringBuffer('WalletsCompanion(')
           ..write('walletId: $walletId, ')
           ..write('amount: $amount, ')
-          ..write('amountTypeId: $amountTypeId')
+          ..write('amountTypeId: $amountTypeId, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
