@@ -1,64 +1,47 @@
-import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import 'package:hackathon_vol13/pages/cameras/camera_page.dart';
+import 'package:hackathon_vol13/database/wallet.dart';
 
 class TakePictureScreen extends StatefulWidget {
-  const TakePictureScreen({
-    super.key,
-  });
+  final AppDatabase database;
+  const TakePictureScreen({super.key, required this.database});
 
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
 }
 
 class TakePictureScreenState extends State<TakePictureScreen> {
+  String? price;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a picture')),
+      appBar: AppBar(title: const Text('input')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          price = await Navigator.push(
             context,
-            MaterialPageRoute(
+            MaterialPageRoute<String>(
               builder: (context) => CameraPage(),
             ),
           );
+          if (price != null) {
+            print('Received Price: $price');
+          }
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.camera_alt_outlined),
       ),
-      body: InputForm(),
-      // SizedBox(
-      //   width: double.infinity,
-      //   child: Column(
-      //     children: <Widget>[
-      //       // TextField(),
-      //       Padding(
-      //         padding: const EdgeInsets.all(8.0),
-      //         child: Text("Input yor price"),
-      //       ),
-      //       TextFormField(
-      //         decoration: const InputDecoration(
-      //           hintText: 'Enter your price',
-      //         ),
-      //         validator: (String? value) {
-      //           if (value == null || value.isEmpty) {
-      //             return 'Please enter some text';
-      //           }
-      //           return null;
-      //         },
-      //       ),
-      //     ],
-      //   ),
-      // ),
+      body: InputForm(price: price, database: widget.database),
     );
   }
 }
 
 class InputForm extends StatefulWidget {
-  const InputForm({super.key});
-
+  final String? price;
+  final AppDatabase database;
+  const InputForm({super.key, this.price, required this.database});
   @override
   State<InputForm> createState() => _InputFormState();
 }
@@ -66,15 +49,78 @@ class InputForm extends StatefulWidget {
 class _InputFormState extends State<InputForm> {
   final _formKey = GlobalKey<FormState>();
   final items = ["item1", "item2", "item3"];
+  final textEditingController = TextEditingController(
+      text:
+          '${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}');
+  Future _getDate(BuildContext context) async {
+    final initialDate = DateTime.now();
+
+    final newDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(DateTime.now().year - 3),
+      lastDate: DateTime(DateTime.now().year + 3),
+    );
+
+    if (newDate != null) {
+      //選択した日付をTextFormFieldに設定
+      textEditingController.text =
+          '${newDate.year}/${newDate.month}/${newDate.day}';
+    } else {
+      return;
+    }
+  }
 
   @override
+  void initState() {
+    super.initState();
+    // _setup();
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
+  int _amount = 0;
+  @override
   Widget build(BuildContext context) {
+    Future<List<String>> _get() async {
+      final items =
+          await widget.database.select(widget.database.amountTypes).get();
+      List<String> itemNames = items
+          .map((amount) => amount.title.toString()) // 文字列に変換
+          .toList();
+      print(itemNames);
+      return itemNames;
+    }
+
+    print(widget.price);
     return Form(
       key: _formKey,
       child: Column(
         children: <Widget>[
           TextFormField(
-            initialValue: "item1",
+            // initialValue: DateTime.now().toString(),
+            controller: textEditingController,
+            decoration: const InputDecoration(
+              hintText: 'Enter date',
+            ),
+            onTap: () {
+              _getDate(context);
+            },
+            onChanged: (date) {
+              print(date);
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            keyboardType: TextInputType.number,
+            initialValue: widget.price,
             decoration: const InputDecoration(
               hintText: 'Enter price',
             ),
@@ -84,6 +130,29 @@ class _InputFormState extends State<InputForm> {
               }
               return null;
             },
+            onChanged: (price) {
+              _amount = int.parse(price);
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          DropdownButtonFormField(
+            decoration: const InputDecoration(
+              hintText: 'Enter item',
+            ),
+            value: items[0],
+            onChanged: (String? newValue) {
+              setState(() {
+                items[0] = newValue!;
+              });
+            },
+            items: items.map((String value) {
+              return DropdownMenuItem(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -92,7 +161,14 @@ class _InputFormState extends State<InputForm> {
                 // Validate will return true if the form is valid, or false if
                 // the form is invalid.
                 if (_formKey.currentState!.validate()) {
-                  // Process data.
+                  insertWallet(
+                      widget.database,
+                      Wallet(
+                        walletId: (Uuid().v4()),
+                        amount: _amount,
+                        amountTypeId: 0,
+                      ));
+                  Navigator.pop(context);
                 }
               },
               child: const Text('Submit'),
@@ -103,20 +179,3 @@ class _InputFormState extends State<InputForm> {
     );
   }
 }
-
-// // A widget that displays the picture taken by the user.
-// class DisplayPictureScreen extends StatelessWidget {
-//   final String imagePath;
-
-//   const DisplayPictureScreen({super.key, required this.imagePath});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Display the Picture')),
-//       // The image is stored as a file on the device. Use the `Image.file`
-//       // constructor with the given path to display the image.
-//       body: Image.file(File(imagePath)),
-//     );
-//   }
-// }
