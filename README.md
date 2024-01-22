@@ -1,4 +1,4 @@
-# Light-Wallet-book
+# Light Wallet book
 
 hackathon_vol13 Flutter project.
 
