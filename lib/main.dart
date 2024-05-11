@@ -1,6 +1,5 @@
 import 'dart:async';
 
-// import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/pages/home/nav_button_icons.dart';
 import 'database/wallet.dart';
