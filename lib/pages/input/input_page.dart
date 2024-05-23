@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 import 'package:hackathon_vol13/pages/cameras/camera_page.dart';
 import 'package:hackathon_vol13/database/wallet.dart';
 
@@ -162,12 +161,10 @@ class _InputFormState extends State<InputForm> {
                 // the form is invalid.
                 if (_formKey.currentState!.validate()) {
                   insertWallet(
-                      widget.database,
-                      Wallet(
-                        walletId: (Uuid().v4()),
-                        amount: _amount,
-                        amountTypeId: 0,
-                      ));
+                    widget.database,
+                    _amount,
+                    0,
+                  );
                   Navigator.pop(context);
                 }
               },

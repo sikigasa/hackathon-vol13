@@ -3,13 +3,21 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:uuid/uuid.dart';
 
 part 'wallet.g.dart';
 
+final _uuid = Uuid();
+
 // @DataClassName('Wallet')
 class Wallets extends Table {
-  TextColumn get walletId => text().unique()();
+  @override
+  Set<Column> get primaryKey => {walletId};
+
+  // TextColumn get walletId => text().unique()();
+  TextColumn get walletId => text().clientDefault(() => _uuid.v7())();
   IntColumn get amount => integer()();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
   IntColumn get amountTypeId =>
       integer().references(AmountTypes, #amountTypeId)();
 }
@@ -63,11 +71,19 @@ Future<List<Wallet>> getAllWallets(AppDatabase db) {
 }
 
 /// 新しい購入履歴をデータベースに挿入する。
-Future insertWallet(AppDatabase db, Wallet wallet) {
-  return db.into(db.wallets).insert(wallet);
+// Future insertWallet(AppDatabase db, Wallet wallet) {
+//   return db.into(db.wallets).insert(wallet);
+// }
+Future insertWallet(AppDatabase db, int amount, int amountTypeId) async {
+  await db.into(db.wallets).insert(
+        WalletsCompanion(
+          amount: Value(amount),
+          amountTypeId: Value(amountTypeId),
+        ),
+      );
 }
 
-/// メモを更新する。
+/// メモを更新する
 Future updateWallet(AppDatabase db, Wallet wallet) {
   return db.update(db.wallets).replace(wallet);
 }
@@ -84,4 +100,10 @@ LazyDatabase _openConnection() {
     final file = File(p.join(dbFolder.path, 'wallet.sqlite'));
     return NativeDatabase(file);
   });
+}
+
+Future createAmountType(AppDatabase db, String title) {
+  return db.into(db.amountTypes).insert(
+        AmountTypesCompanion.insert(title: title),
+      );
 }

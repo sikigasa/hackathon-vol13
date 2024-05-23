@@ -1,5 +1,3 @@
-import 'package:async/async.dart';
-
 import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/database/wallet.dart';
 
@@ -9,6 +7,8 @@ class WalletPage extends StatefulWidget {
 
   @override
   State<WalletPage> createState() => _WalletPageState();
+  // // 戻ってきたときにdbからデータを取得する
+  // State<WalletPage> setState() => _WalletPageState();
 }
 
 class _WalletPageState extends State<WalletPage> {

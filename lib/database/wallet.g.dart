@@ -194,13 +194,21 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
   late final GeneratedColumn<String> walletId = GeneratedColumn<String>(
       'wallet_id', aliasedName, false,
       type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'));
+      requiredDuringInsert: false,
+      clientDefault: () => _uuid.v7());
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
   late final GeneratedColumn<int> amount = GeneratedColumn<int>(
       'amount', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
   static const VerificationMeta _amountTypeIdMeta =
       const VerificationMeta('amountTypeId');
   @override
@@ -211,7 +219,8 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
       defaultConstraints: GeneratedColumn.constraintIsAlways(
           'REFERENCES amount_types (amount_type_id)'));
   @override
-  List<GeneratedColumn> get $columns => [walletId, amount, amountTypeId];
+  List<GeneratedColumn> get $columns =>
+      [walletId, amount, createdAt, amountTypeId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -225,14 +234,16 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
     if (data.containsKey('wallet_id')) {
       context.handle(_walletIdMeta,
           walletId.isAcceptableOrUnknown(data['wallet_id']!, _walletIdMeta));
-    } else if (isInserting) {
-      context.missing(_walletIdMeta);
     }
     if (data.containsKey('amount')) {
       context.handle(_amountMeta,
           amount.isAcceptableOrUnknown(data['amount']!, _amountMeta));
     } else if (isInserting) {
       context.missing(_amountMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
     }
     if (data.containsKey('amount_type_id')) {
       context.handle(
@@ -246,7 +257,7 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => const {};
+  Set<GeneratedColumn> get $primaryKey => {walletId};
   @override
   Wallet map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -255,6 +266,8 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
           .read(DriftSqlType.string, data['${effectivePrefix}wallet_id'])!,
       amount: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}amount'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       amountTypeId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}amount_type_id'])!,
     );
@@ -269,16 +282,19 @@ class $WalletsTable extends Wallets with TableInfo<$WalletsTable, Wallet> {
 class Wallet extends DataClass implements Insertable<Wallet> {
   final String walletId;
   final int amount;
+  final DateTime createdAt;
   final int amountTypeId;
   const Wallet(
       {required this.walletId,
       required this.amount,
+      required this.createdAt,
       required this.amountTypeId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['wallet_id'] = Variable<String>(walletId);
     map['amount'] = Variable<int>(amount);
+    map['created_at'] = Variable<DateTime>(createdAt);
     map['amount_type_id'] = Variable<int>(amountTypeId);
     return map;
   }
@@ -287,6 +303,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     return WalletsCompanion(
       walletId: Value(walletId),
       amount: Value(amount),
+      createdAt: Value(createdAt),
       amountTypeId: Value(amountTypeId),
     );
   }
@@ -297,6 +314,7 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     return Wallet(
       walletId: serializer.fromJson<String>(json['walletId']),
       amount: serializer.fromJson<int>(json['amount']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       amountTypeId: serializer.fromJson<int>(json['amountTypeId']),
     );
   }
@@ -306,13 +324,20 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     return <String, dynamic>{
       'walletId': serializer.toJson<String>(walletId),
       'amount': serializer.toJson<int>(amount),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
       'amountTypeId': serializer.toJson<int>(amountTypeId),
     };
   }
 
-  Wallet copyWith({String? walletId, int? amount, int? amountTypeId}) => Wallet(
+  Wallet copyWith(
+          {String? walletId,
+          int? amount,
+          DateTime? createdAt,
+          int? amountTypeId}) =>
+      Wallet(
         walletId: walletId ?? this.walletId,
         amount: amount ?? this.amount,
+        createdAt: createdAt ?? this.createdAt,
         amountTypeId: amountTypeId ?? this.amountTypeId,
       );
   @override
@@ -320,50 +345,56 @@ class Wallet extends DataClass implements Insertable<Wallet> {
     return (StringBuffer('Wallet(')
           ..write('walletId: $walletId, ')
           ..write('amount: $amount, ')
+          ..write('createdAt: $createdAt, ')
           ..write('amountTypeId: $amountTypeId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(walletId, amount, amountTypeId);
+  int get hashCode => Object.hash(walletId, amount, createdAt, amountTypeId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is Wallet &&
           other.walletId == this.walletId &&
           other.amount == this.amount &&
+          other.createdAt == this.createdAt &&
           other.amountTypeId == this.amountTypeId);
 }
 
 class WalletsCompanion extends UpdateCompanion<Wallet> {
   final Value<String> walletId;
   final Value<int> amount;
+  final Value<DateTime> createdAt;
   final Value<int> amountTypeId;
   final Value<int> rowid;
   const WalletsCompanion({
     this.walletId = const Value.absent(),
     this.amount = const Value.absent(),
+    this.createdAt = const Value.absent(),
     this.amountTypeId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   WalletsCompanion.insert({
-    required String walletId,
+    this.walletId = const Value.absent(),
     required int amount,
+    this.createdAt = const Value.absent(),
     required int amountTypeId,
     this.rowid = const Value.absent(),
-  })  : walletId = Value(walletId),
-        amount = Value(amount),
+  })  : amount = Value(amount),
         amountTypeId = Value(amountTypeId);
   static Insertable<Wallet> custom({
     Expression<String>? walletId,
     Expression<int>? amount,
+    Expression<DateTime>? createdAt,
     Expression<int>? amountTypeId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (walletId != null) 'wallet_id': walletId,
       if (amount != null) 'amount': amount,
+      if (createdAt != null) 'created_at': createdAt,
       if (amountTypeId != null) 'amount_type_id': amountTypeId,
       if (rowid != null) 'rowid': rowid,
     });
@@ -372,11 +403,13 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
   WalletsCompanion copyWith(
       {Value<String>? walletId,
       Value<int>? amount,
+      Value<DateTime>? createdAt,
       Value<int>? amountTypeId,
       Value<int>? rowid}) {
     return WalletsCompanion(
       walletId: walletId ?? this.walletId,
       amount: amount ?? this.amount,
+      createdAt: createdAt ?? this.createdAt,
       amountTypeId: amountTypeId ?? this.amountTypeId,
       rowid: rowid ?? this.rowid,
     );
@@ -390,6 +423,9 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     }
     if (amount.present) {
       map['amount'] = Variable<int>(amount.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
     }
     if (amountTypeId.present) {
       map['amount_type_id'] = Variable<int>(amountTypeId.value);
@@ -405,6 +441,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
     return (StringBuffer('WalletsCompanion(')
           ..write('walletId: $walletId, ')
           ..write('amount: $amount, ')
+          ..write('createdAt: $createdAt, ')
           ..write('amountTypeId: $amountTypeId, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -414,6 +451,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
+  _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
   late final $AmountTypesTable amountTypes = $AmountTypesTable(this);
   late final $WalletsTable wallets = $WalletsTable(this);
   @override
@@ -421,4 +459,253 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [amountTypes, wallets];
+}
+
+typedef $$AmountTypesTableInsertCompanionBuilder = AmountTypesCompanion
+    Function({
+  Value<int> amountTypeId,
+  required String title,
+});
+typedef $$AmountTypesTableUpdateCompanionBuilder = AmountTypesCompanion
+    Function({
+  Value<int> amountTypeId,
+  Value<String> title,
+});
+
+class $$AmountTypesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $AmountTypesTable,
+    AmountType,
+    $$AmountTypesTableFilterComposer,
+    $$AmountTypesTableOrderingComposer,
+    $$AmountTypesTableProcessedTableManager,
+    $$AmountTypesTableInsertCompanionBuilder,
+    $$AmountTypesTableUpdateCompanionBuilder> {
+  $$AmountTypesTableTableManager(_$AppDatabase db, $AmountTypesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AmountTypesTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$AmountTypesTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) =>
+              $$AmountTypesTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<int> amountTypeId = const Value.absent(),
+            Value<String> title = const Value.absent(),
+          }) =>
+              AmountTypesCompanion(
+            amountTypeId: amountTypeId,
+            title: title,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<int> amountTypeId = const Value.absent(),
+            required String title,
+          }) =>
+              AmountTypesCompanion.insert(
+            amountTypeId: amountTypeId,
+            title: title,
+          ),
+        ));
+}
+
+class $$AmountTypesTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $AmountTypesTable,
+    AmountType,
+    $$AmountTypesTableFilterComposer,
+    $$AmountTypesTableOrderingComposer,
+    $$AmountTypesTableProcessedTableManager,
+    $$AmountTypesTableInsertCompanionBuilder,
+    $$AmountTypesTableUpdateCompanionBuilder> {
+  $$AmountTypesTableProcessedTableManager(super.$state);
+}
+
+class $$AmountTypesTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $AmountTypesTable> {
+  $$AmountTypesTableFilterComposer(super.$state);
+  ColumnFilters<int> get amountTypeId => $state.composableBuilder(
+      column: $state.table.amountTypeId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get title => $state.composableBuilder(
+      column: $state.table.title,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ComposableFilter walletsRefs(
+      ComposableFilter Function($$WalletsTableFilterComposer f) f) {
+    final $$WalletsTableFilterComposer composer = $state.composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.amountTypeId,
+        referencedTable: $state.db.wallets,
+        getReferencedColumn: (t) => t.amountTypeId,
+        builder: (joinBuilder, parentComposers) => $$WalletsTableFilterComposer(
+            ComposerState(
+                $state.db, $state.db.wallets, joinBuilder, parentComposers)));
+    return f(composer);
+  }
+}
+
+class $$AmountTypesTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $AmountTypesTable> {
+  $$AmountTypesTableOrderingComposer(super.$state);
+  ColumnOrderings<int> get amountTypeId => $state.composableBuilder(
+      column: $state.table.amountTypeId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get title => $state.composableBuilder(
+      column: $state.table.title,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+}
+
+typedef $$WalletsTableInsertCompanionBuilder = WalletsCompanion Function({
+  Value<String> walletId,
+  required int amount,
+  Value<DateTime> createdAt,
+  required int amountTypeId,
+  Value<int> rowid,
+});
+typedef $$WalletsTableUpdateCompanionBuilder = WalletsCompanion Function({
+  Value<String> walletId,
+  Value<int> amount,
+  Value<DateTime> createdAt,
+  Value<int> amountTypeId,
+  Value<int> rowid,
+});
+
+class $$WalletsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $WalletsTable,
+    Wallet,
+    $$WalletsTableFilterComposer,
+    $$WalletsTableOrderingComposer,
+    $$WalletsTableProcessedTableManager,
+    $$WalletsTableInsertCompanionBuilder,
+    $$WalletsTableUpdateCompanionBuilder> {
+  $$WalletsTableTableManager(_$AppDatabase db, $WalletsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$WalletsTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$WalletsTableOrderingComposer(ComposerState(db, table)),
+          getChildManagerBuilder: (p) => $$WalletsTableProcessedTableManager(p),
+          getUpdateCompanionBuilder: ({
+            Value<String> walletId = const Value.absent(),
+            Value<int> amount = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> amountTypeId = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WalletsCompanion(
+            walletId: walletId,
+            amount: amount,
+            createdAt: createdAt,
+            amountTypeId: amountTypeId,
+            rowid: rowid,
+          ),
+          getInsertCompanionBuilder: ({
+            Value<String> walletId = const Value.absent(),
+            required int amount,
+            Value<DateTime> createdAt = const Value.absent(),
+            required int amountTypeId,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WalletsCompanion.insert(
+            walletId: walletId,
+            amount: amount,
+            createdAt: createdAt,
+            amountTypeId: amountTypeId,
+            rowid: rowid,
+          ),
+        ));
+}
+
+class $$WalletsTableProcessedTableManager extends ProcessedTableManager<
+    _$AppDatabase,
+    $WalletsTable,
+    Wallet,
+    $$WalletsTableFilterComposer,
+    $$WalletsTableOrderingComposer,
+    $$WalletsTableProcessedTableManager,
+    $$WalletsTableInsertCompanionBuilder,
+    $$WalletsTableUpdateCompanionBuilder> {
+  $$WalletsTableProcessedTableManager(super.$state);
+}
+
+class $$WalletsTableFilterComposer
+    extends FilterComposer<_$AppDatabase, $WalletsTable> {
+  $$WalletsTableFilterComposer(super.$state);
+  ColumnFilters<String> get walletId => $state.composableBuilder(
+      column: $state.table.walletId,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get amount => $state.composableBuilder(
+      column: $state.table.amount,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<DateTime> get createdAt => $state.composableBuilder(
+      column: $state.table.createdAt,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  $$AmountTypesTableFilterComposer get amountTypeId {
+    final $$AmountTypesTableFilterComposer composer = $state.composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.amountTypeId,
+        referencedTable: $state.db.amountTypes,
+        getReferencedColumn: (t) => t.amountTypeId,
+        builder: (joinBuilder, parentComposers) =>
+            $$AmountTypesTableFilterComposer(ComposerState($state.db,
+                $state.db.amountTypes, joinBuilder, parentComposers)));
+    return composer;
+  }
+}
+
+class $$WalletsTableOrderingComposer
+    extends OrderingComposer<_$AppDatabase, $WalletsTable> {
+  $$WalletsTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get walletId => $state.composableBuilder(
+      column: $state.table.walletId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get amount => $state.composableBuilder(
+      column: $state.table.amount,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get createdAt => $state.composableBuilder(
+      column: $state.table.createdAt,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  $$AmountTypesTableOrderingComposer get amountTypeId {
+    final $$AmountTypesTableOrderingComposer composer = $state.composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.amountTypeId,
+        referencedTable: $state.db.amountTypes,
+        getReferencedColumn: (t) => t.amountTypeId,
+        builder: (joinBuilder, parentComposers) =>
+            $$AmountTypesTableOrderingComposer(ComposerState($state.db,
+                $state.db.amountTypes, joinBuilder, parentComposers)));
+    return composer;
+  }
+}
+
+class _$AppDatabaseManager {
+  final _$AppDatabase _db;
+  _$AppDatabaseManager(this._db);
+  $$AmountTypesTableTableManager get amountTypes =>
+      $$AmountTypesTableTableManager(_db, _db.amountTypes);
+  $$WalletsTableTableManager get wallets =>
+      $$WalletsTableTableManager(_db, _db.wallets);
 }
