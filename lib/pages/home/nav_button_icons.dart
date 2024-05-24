@@ -78,8 +78,8 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
     return Scaffold(
       body: _pageOptions[selectedNavIndex](context),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => TakePictureScreen(
@@ -87,6 +87,7 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
               ),
             ),
           );
+          setState(() {});
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add_rounded),
