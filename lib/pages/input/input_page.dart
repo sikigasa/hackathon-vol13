@@ -85,7 +85,7 @@ class _InputFormState extends State<InputForm> {
   int _amount = 0;
   @override
   Widget build(BuildContext context) {
-    Future<List<String>> _get() async {
+    Future<List<String>> get() async {
       final items =
           await widget.database.select(widget.database.amountTypes).get();
       List<String> itemNames = items
