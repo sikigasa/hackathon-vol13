@@ -117,18 +117,18 @@ packages:
     dependency: "direct main"
     description:
       name: camera
-      sha256: cf8ed1789aa244392cfc49d13e97879700476ba641c92500e01f630e109c0f6c
+      sha256: dfa8fc5a1adaeb95e7a54d86a5bd56f4bb0e035515354c8ac6d262e35cec2ec8
       url: "https://pub.dev"
     source: hosted
-    version: "0.11.0"
-  camera_android_camerax:
+    version: "0.10.6"
+  camera_android:
     dependency: transitive
     description:
-      name: camera_android_camerax
-      sha256: "59967e6d80df9d682a33b86f228cc524e6b52d6184b84f6ac62151dd98bd1ea0"
+      name: camera_android
+      sha256: b350ac087f111467e705b2b76cc1322f7f5bdc122aa83b4b243b0872f390d229
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.5+2"
+    version: "0.10.9+2"
   camera_avfoundation:
     dependency: transitive
     description:
@@ -772,18 +772,18 @@ packages:
     dependency: "direct main"
     description:
       name: rive
-      sha256: "255ab7892a77494458846cecee1376a017e64fd6b4130b51ec21424d12ffa6fe"
+      sha256: "03bae056e67a5c98f9523c34f8ea63c15b323426a7e8d76d7ebb93066d4df6dc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.4"
+    version: "0.13.5"
   rive_common:
     dependency: transitive
     description:
       name: rive_common
-      sha256: "3a0d95f529d52caef535d8ff32d75629ca37f7ab4707b13c83e9552a322557bc"
+      sha256: "3fe76ba4680787741688ee393e47b63417e8643816795e4eac01021683af1d84"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.8"
+    version: "0.4.9"
   shelf:
     dependency: transitive
     description:
@@ -841,10 +841,10 @@ packages:
     dependency: "direct main"
     description:
       name: sqlite3_flutter_libs
-      sha256: fb2a106a2ea6042fe57de2c47074cc31539a941819c91e105b864744605da3f5
+      sha256: "1e62698dc1ab396152ccaf3b3990d826244e9f3c8c39b51805f209adcd6dbea3"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.21"
+    version: "0.5.22"
   sqlparser:
     dependency: transitive
     description:
