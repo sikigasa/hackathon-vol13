@@ -59,7 +59,7 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
 
   @override
   Widget build(BuildContext context) {
-    List<WidgetBuilder> _pageOptions = [
+    List<WidgetBuilder> pageOptions = [
       (BuildContext context) => HomePage(
             database: widget.database,
           ),
@@ -76,18 +76,19 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
     ];
 
     return Scaffold(
-      body: _pageOptions[selectedNavIndex](context),
+      body: pageOptions[selectedNavIndex](context),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          await Navigator.push(
+        onPressed: () {
+          Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => TakePictureScreen(
                 database: widget.database,
               ),
             ),
-          );
-          setState(() {});
+          ).then((value) {
+            setState(() {});
+          });
         },
         backgroundColor: Colors.blue,
         child: const Icon(Icons.add_rounded),
