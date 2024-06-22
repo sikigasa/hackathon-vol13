@@ -17,8 +17,8 @@ class _WalletPageState extends State<WalletPage> {
     return Scaffold(
       body: Column(
         children: [
-          SizedBox(height: 20),
-          Text('残高', style: TextStyle(fontSize: 15)),
+          const SizedBox(height: 20),
+          const Text('残高', style: TextStyle(fontSize: 15)),
           WalletCard(
             database: widget.database,
           ),
@@ -48,7 +48,7 @@ class WalletCard extends StatelessWidget {
       children: [
         Center(
           child: Card(
-            color: Color.fromARGB(255, 28, 105, 135),
+            color: const Color.fromARGB(255, 28, 105, 135),
             child: InkWell(
               splashColor: Colors.greenAccent.withAlpha(10),
               highlightColor: Colors.transparent,
@@ -70,11 +70,11 @@ class WalletCard extends StatelessWidget {
                       } else if (snapshot.hasError) {
                         // エラーが発生した場合の表示
                         return Text('${snapshot.error}',
-                            style: TextStyle(fontSize: 30));
+                            style: const TextStyle(fontSize: 30));
                       } else {
                         // データが取得できた場合の表示
                         return Text('${snapshot.data}円',
-                            style: TextStyle(fontSize: 30));
+                            style: const TextStyle(fontSize: 30));
                       }
                     },
                   ), //Text('$balance円', style: TextStyle(fontSize: 30)),

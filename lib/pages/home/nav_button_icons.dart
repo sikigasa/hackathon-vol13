@@ -34,7 +34,7 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
 
   void animateIcon(int index) {
     riveIconInputs[index].change(true);
-    Future.delayed(Duration(milliseconds: 800), () {
+    Future.delayed(const Duration(milliseconds: 800), () {
       riveIconInputs[index].change(false);
     });
   }
@@ -96,11 +96,11 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
       bottomNavigationBar: SafeArea(
         child: Container(
           height: 66,
-          padding: EdgeInsets.all(12),
-          margin: EdgeInsets.symmetric(horizontal: 16), //横幅
+          padding: const EdgeInsets.all(12),
+          margin: const EdgeInsets.symmetric(horizontal: 16), //横幅
           decoration: BoxDecoration(
             color: buttonNavBgColor.withOpacity(0.8),
-            borderRadius: BorderRadius.all(Radius.circular(18)),
+            borderRadius: const BorderRadius.all(Radius.circular(18)),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.3),
@@ -183,11 +183,11 @@ class AnimatedBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 200),
-      margin: EdgeInsets.only(bottom: 2),
+      duration: const Duration(milliseconds: 200),
+      margin: const EdgeInsets.only(bottom: 2),
       height: 4,
       width: isActive ? 20 : 0,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color.fromARGB(255, 61, 77, 126),
         borderRadius: BorderRadius.all(Radius.circular(6)),
       ),

@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ],
         ),
       ),
-      drawerScrimColor: Color.fromARGB(219, 89, 0, 255),
+      drawerScrimColor: const Color.fromARGB(219, 89, 0, 255),
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
