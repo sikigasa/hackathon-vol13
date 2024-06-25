@@ -12,49 +12,17 @@ class TokenizerDefinition extends GrammarDefinition {
   @override
   Parser start() => ref0(token).star();
 
-  Parser token() =>
-      ref0(number) |
-      ref0(operator) |
-      ref0(identifier) |
-      ref0(parenthesis) |
-      ref0(whitespace);
+  Parser token() => ref0(backslashNumber);
 
-  // 特定の文字「a」を解析するパーサ
-  // final specificChar = char('合計');
+  Parser backslashNumber() =>
+      (char('¥') & ref0(number) & ref0(whitespace)).map((values) {
+        final numberString = values[1].replaceFirst(RegExp(r'^0+'), '');
+        return numberString;
+      });
 
-  // 一つ以上の数字を解析するパーサ
-  // final digits = digit().plus();
+  Parser number() => digit().plus().flatten();
 
-  // 「a」の後に続く数字を解析するパーサを定義
-  // final parser = specificChar.seq(digits).map((values) {
-  //   return values[1].join(); // 数字の部分を抽出
-  // });
-  Parser totalSum() => char('合計');
-  //string('合計').trim().map((value) => Token(TokenType.identifier, value));
-
-  Parser number() => digit()
-      .plus()
-      .flatten()
-      .trim()
-      .map((value) => Token(TokenType.number, value));
-
-  Parser operator() => (char('+') | char('-') | char('*') | char('/'))
-      .flatten()
-      .trim()
-      .map((value) => Token(TokenType.operator, value));
-
-  Parser identifier() => (letter() & word().star())
-      .flatten()
-      .trim()
-      .map((value) => Token(TokenType.identifier, value));
-
-  Parser parenthesis() => (char('(') | char(')'))
-      .flatten()
-      .trim()
-      .map((value) => Token(TokenType.parenthesis, value));
-
-  // Parser whitespace() =>
-  //     whitespace().plus().map((value) => Token(TokenType.whitespace, value));
+  Parser whitespace() => whitespace().plus().flatten();
 }
 
 // トークンタイプ
@@ -72,7 +40,7 @@ class Token {
 }
 
 parser(String input) {
-  final tokenizer = TokenizerDefinition();
+  const tokenizer = TokenizerDefinition();
   final parser = tokenizer.build();
   final result = parser.parse(input);
 

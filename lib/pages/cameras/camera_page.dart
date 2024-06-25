@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:hackathon_vol13/utils/camera.dart';
+import 'package:hackathon_vol13/utils/parser.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -150,8 +151,9 @@ class _CameraState extends State<CameraPage> {
                     flex: 1,
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.all(20),
-                      child: Text(
-                          _recognizedText != null ? _recognizedText!.text : ''),
+                      child: Text(_recognizedText != null
+                          ? parser(_recognizedText!.text)
+                          : ''),
                     ),
                   )
                 ]),
