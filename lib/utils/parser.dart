@@ -15,14 +15,14 @@ class TokenizerDefinition extends GrammarDefinition {
   Parser token() => ref0(backslashNumber);
 
   Parser backslashNumber() =>
-      (char('¥') & ref0(number) & ref0(whitespace)).map((values) {
+      (char('¥') & ref0(number) & ref0(whitespace1)).map((values) {
         final numberString = values[1].replaceFirst(RegExp(r'^0+'), '');
         return numberString;
       });
 
   Parser number() => digit().plus().flatten();
 
-  Parser whitespace() => whitespace().plus().flatten();
+  Parser whitespace1() => whitespace().plus().flatten();
 }
 
 // トークンタイプ
@@ -47,7 +47,7 @@ parser(String input) {
   // パーサのテスト
   switch (result) {
     case Success(value: final value):
-      print('解析成功: $value'); // 出力: 解析成功: 12345
+      print('解析成功: $value');
     case Failure(
         message: final message,
         position: final position,
@@ -59,5 +59,7 @@ parser(String input) {
     default:
       print('解析失敗');
   }
-  return result.value;
+  print(result.value);
+  String res = result.value.toString();
+  return res;
 }
