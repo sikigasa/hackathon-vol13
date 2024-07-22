@@ -44,20 +44,6 @@ class TokenizerDefinition2 extends GrammarDefinition {
   Parser whitespace1() => whitespace().plus().flatten();
 }
 
-// トークンタイプ
-// enum TokenType { number, operator, identifier, parenthesis, whitespace }
-
-// トークンクラス
-// class Token {
-//   final TokenType type;
-//   final String value;
-
-//   Token(this.type, this.value);
-
-//   @override
-//   String toString() => 'Token(type: $type, value: $value)';
-// }
-
 parser(String input) {
   const tokenizer = TokenizerDefinition();
   final parser = tokenizer.build();
