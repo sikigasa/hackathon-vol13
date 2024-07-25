@@ -28,20 +28,54 @@ class TokenizerDefinition2 extends GrammarDefinition {
   const TokenizerDefinition2();
 
   @override
-  Parser start() => ref0(token); //.star();
+  // Parser start() => ref0(token); //.star();
 
-  Parser token() => ref0(backslashNumber);
+  // Parser token() => ref0(backslashNumber) | ref0(whitespace1);
 
-  Parser backslashNumber() =>
-      (char('¥') & ref0(number) & ref0(whitespace1) | char("円").optional())
+  // Parser backslashNumber() =>
+  //     (char('¥') & ref0(number) & ref0(whitespaceOptional) |
+  //             char("円").optional())
+  //         .map((values) {
+  //       String numberString = values[1];
+  //       numberString = numberString.replaceFirst(RegExp(r'^0+'), '');
+  //       return numberString;
+  //     });
+
+  // Parser number() => digit().plus().flatten();
+
+  // Parser whitespace1() => whitespace().plus().flatten().trim();
+
+  // Parser whitespaceOptional() => whitespace().star().flatten();
+  Parser start() => ref0(token).star();
+
+  Parser token() =>
+      ref0(validBackslashNumber) |
+      ref0(invalidBackslashNumber) |
+      ref0(whitespace1);
+
+  // 有効なバックスラッシュ後の数字を解析
+  Parser validBackslashNumber() =>
+      (char('\\') & ref0(nonZeroNumber) & ref0(whitespaceOptional))
           .map((values) {
-        final numberString = values[1].replaceFirst(RegExp(r'^0+'), '');
-        return numberString;
+        return values[1];
       });
 
-  Parser number() => digit().plus().flatten();
+  // 無効なバックスラッシュ後の数字を解析
+  Parser invalidBackslashNumber() =>
+      (char('\\') & ref0(zeroStartNumber) & ref0(whitespaceOptional))
+          .map((_) => '');
+
+  // 先頭が0ではない数字
+  Parser nonZeroNumber() =>
+      digit().plus().flatten().where((value) => !value.startsWith('0'));
+
+  // 先頭が0である数字
+  Parser zeroStartNumber() =>
+      digit().plus().flatten().where((value) => value.startsWith('0'));
 
   Parser whitespace1() => whitespace().plus().flatten();
+
+  Parser whitespaceOptional() => whitespace().star().flatten();
 }
 
 parser(String input) {
@@ -71,7 +105,7 @@ parser(String input) {
 
 simpleParser(String input) {
   final parser = const TokenizerDefinition2().build();
-  final result = parser.parse('¥124円 45we6');
+  final result = parser.parse('\\12345 \\1242222円 \\126円 45we6 asdwa234');
   // パーサのテスト
   switch (result) {
     case Success(value: final value):
