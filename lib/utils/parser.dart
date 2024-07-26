@@ -28,24 +28,6 @@ class TokenizerDefinition2 extends GrammarDefinition {
   const TokenizerDefinition2();
 
   @override
-  // Parser start() => ref0(token); //.star();
-
-  // Parser token() => ref0(backslashNumber) | ref0(whitespace1);
-
-  // Parser backslashNumber() =>
-  //     (char('¥') & ref0(number) & ref0(whitespaceOptional) |
-  //             char("円").optional())
-  //         .map((values) {
-  //       String numberString = values[1];
-  //       numberString = numberString.replaceFirst(RegExp(r'^0+'), '');
-  //       return numberString;
-  //     });
-
-  // Parser number() => digit().plus().flatten();
-
-  // Parser whitespace1() => whitespace().plus().flatten().trim();
-
-  // Parser whitespaceOptional() => whitespace().star().flatten();
   Parser start() => ref0(token).star();
 
   Parser token() =>
@@ -110,6 +92,8 @@ simpleParser(String input) {
   switch (result) {
     case Success(value: final value):
       print('解析成功: $value');
+    // final tokens = result.value.where((token) => token.isNotEmpty).toList();
+    // print('解析された数字: $tokens');
     case Failure(
         message: final message,
         position: final position,
