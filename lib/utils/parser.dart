@@ -30,34 +30,9 @@ class TokenizerDefinition2 extends GrammarDefinition {
   @override
   Parser start() => ref0(token).star();
 
-  Parser token() =>
-      ref0(validBackslashNumber) |
-      ref0(invalidBackslashNumber) |
-      ref0(whitespace1);
+  Parser token() => ref0(whitespace1);
 
-  // 有効なバックスラッシュ後の数字を解析
-  Parser validBackslashNumber() =>
-      (char('\\') & ref0(nonZeroNumber) & ref0(whitespaceOptional))
-          .map((values) {
-        return values[1];
-      });
-
-  // 無効なバックスラッシュ後の数字を解析
-  Parser invalidBackslashNumber() =>
-      (char('\\') & ref0(zeroStartNumber) & ref0(whitespaceOptional))
-          .map((_) => '');
-
-  // 先頭が0ではない数字
-  Parser nonZeroNumber() =>
-      digit().plus().flatten().where((value) => !value.startsWith('0'));
-
-  // 先頭が0である数字
-  Parser zeroStartNumber() =>
-      digit().plus().flatten().where((value) => value.startsWith('0'));
-
-  Parser whitespace1() => whitespace().plus().flatten();
-
-  Parser whitespaceOptional() => whitespace().star().flatten();
+  Parser whitespace1() => whitespace().plus();
 }
 
 parser(String input) {
