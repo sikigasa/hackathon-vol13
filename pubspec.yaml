@@ -39,7 +39,7 @@ dependencies:
   google_ml_kit: ^0.18.0
   google_mlkit_text_recognition: ^0.13.0
   permission_handler: ^11.3.1
-  rive: ^0.13.12
+  rive: ^0.13.13
   fl_chart: ^0.68.0
   drift: ^2.19.1
   sqlite3_flutter_libs: ^0.5.24
