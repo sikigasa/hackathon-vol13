@@ -64,12 +64,20 @@ simpleParser(String input) {
   List<String> words = input.split(' ');
   List<String> filteredWords = [];
   String number = '';
+  int highestNumber = 0;
 
   for (var word in words) {
-    if (word.contains("¥") || word.contains("\\")) {
-      number = word.replaceAll(RegExp(r'[^1-9][0-9]*'), '');
+    if (word.contains("¥") || word.contains("\\") || word.contains("円")) {
+      number = word.replaceAll(RegExp(r'[^0-9]'), '');
       filteredWords.add(number);
+      int? filteredNumber = int.tryParse(number);
+      if (filteredNumber != null) {
+        if (highestNumber < filteredNumber) {
+          highestNumber = filteredNumber;
+        }
+      }
     }
   }
-  return number;
+  var res = highestNumber.toString();
+  return res;
 }
