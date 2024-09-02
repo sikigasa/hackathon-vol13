@@ -113,6 +113,15 @@ class AmountType extends DataClass implements Insertable<AmountType> {
         amountTypeId: amountTypeId ?? this.amountTypeId,
         title: title ?? this.title,
       );
+  AmountType copyWithCompanion(AmountTypesCompanion data) {
+    return AmountType(
+      amountTypeId: data.amountTypeId.present
+          ? data.amountTypeId.value
+          : this.amountTypeId,
+      title: data.title.present ? data.title.value : this.title,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('AmountType(')
@@ -340,6 +349,17 @@ class Wallet extends DataClass implements Insertable<Wallet> {
         createdAt: createdAt ?? this.createdAt,
         amountTypeId: amountTypeId ?? this.amountTypeId,
       );
+  Wallet copyWithCompanion(WalletsCompanion data) {
+    return Wallet(
+      walletId: data.walletId.present ? data.walletId.value : this.walletId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      amountTypeId: data.amountTypeId.present
+          ? data.amountTypeId.value
+          : this.amountTypeId,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('Wallet(')
@@ -451,7 +471,7 @@ class WalletsCompanion extends UpdateCompanion<Wallet> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
-  _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
+  $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $AmountTypesTable amountTypes = $AmountTypesTable(this);
   late final $WalletsTable wallets = $WalletsTable(this);
   @override
@@ -461,7 +481,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [amountTypes, wallets];
 }
 
-typedef $$AmountTypesTableInsertCompanionBuilder = AmountTypesCompanion
+typedef $$AmountTypesTableCreateCompanionBuilder = AmountTypesCompanion
     Function({
   Value<int> amountTypeId,
   required String title,
@@ -472,54 +492,24 @@ typedef $$AmountTypesTableUpdateCompanionBuilder = AmountTypesCompanion
   Value<String> title,
 });
 
-class $$AmountTypesTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $AmountTypesTable,
-    AmountType,
-    $$AmountTypesTableFilterComposer,
-    $$AmountTypesTableOrderingComposer,
-    $$AmountTypesTableProcessedTableManager,
-    $$AmountTypesTableInsertCompanionBuilder,
-    $$AmountTypesTableUpdateCompanionBuilder> {
-  $$AmountTypesTableTableManager(_$AppDatabase db, $AmountTypesTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$AmountTypesTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$AmountTypesTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) =>
-              $$AmountTypesTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
-            Value<int> amountTypeId = const Value.absent(),
-            Value<String> title = const Value.absent(),
-          }) =>
-              AmountTypesCompanion(
-            amountTypeId: amountTypeId,
-            title: title,
-          ),
-          getInsertCompanionBuilder: ({
-            Value<int> amountTypeId = const Value.absent(),
-            required String title,
-          }) =>
-              AmountTypesCompanion.insert(
-            amountTypeId: amountTypeId,
-            title: title,
-          ),
-        ));
-}
+final class $$AmountTypesTableReferences
+    extends BaseReferences<_$AppDatabase, $AmountTypesTable, AmountType> {
+  $$AmountTypesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-class $$AmountTypesTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $AmountTypesTable,
-    AmountType,
-    $$AmountTypesTableFilterComposer,
-    $$AmountTypesTableOrderingComposer,
-    $$AmountTypesTableProcessedTableManager,
-    $$AmountTypesTableInsertCompanionBuilder,
-    $$AmountTypesTableUpdateCompanionBuilder> {
-  $$AmountTypesTableProcessedTableManager(super.$state);
+  static MultiTypedResultKey<$WalletsTable, List<Wallet>> _walletsRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.wallets,
+          aliasName: $_aliasNameGenerator(
+              db.amountTypes.amountTypeId, db.wallets.amountTypeId));
+
+  $$WalletsTableProcessedTableManager get walletsRefs {
+    final manager = $$WalletsTableTableManager($_db, $_db.wallets)
+        .filter((f) => f.amountTypeId.amountTypeId($_item.amountTypeId));
+
+    final cache = $_typedResult.readTableOrNull(_walletsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$AmountTypesTableFilterComposer
@@ -563,7 +553,85 @@ class $$AmountTypesTableOrderingComposer
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
 
-typedef $$WalletsTableInsertCompanionBuilder = WalletsCompanion Function({
+class $$AmountTypesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $AmountTypesTable,
+    AmountType,
+    $$AmountTypesTableFilterComposer,
+    $$AmountTypesTableOrderingComposer,
+    $$AmountTypesTableCreateCompanionBuilder,
+    $$AmountTypesTableUpdateCompanionBuilder,
+    (AmountType, $$AmountTypesTableReferences),
+    AmountType,
+    PrefetchHooks Function({bool walletsRefs})> {
+  $$AmountTypesTableTableManager(_$AppDatabase db, $AmountTypesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$AmountTypesTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$AmountTypesTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<int> amountTypeId = const Value.absent(),
+            Value<String> title = const Value.absent(),
+          }) =>
+              AmountTypesCompanion(
+            amountTypeId: amountTypeId,
+            title: title,
+          ),
+          createCompanionCallback: ({
+            Value<int> amountTypeId = const Value.absent(),
+            required String title,
+          }) =>
+              AmountTypesCompanion.insert(
+            amountTypeId: amountTypeId,
+            title: title,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$AmountTypesTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({walletsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (walletsRefs) db.wallets],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (walletsRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable:
+                            $$AmountTypesTableReferences._walletsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$AmountTypesTableReferences(db, table, p0)
+                                .walletsRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems.where(
+                                (e) => e.amountTypeId == item.amountTypeId),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$AmountTypesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $AmountTypesTable,
+    AmountType,
+    $$AmountTypesTableFilterComposer,
+    $$AmountTypesTableOrderingComposer,
+    $$AmountTypesTableCreateCompanionBuilder,
+    $$AmountTypesTableUpdateCompanionBuilder,
+    (AmountType, $$AmountTypesTableReferences),
+    AmountType,
+    PrefetchHooks Function({bool walletsRefs})>;
+typedef $$WalletsTableCreateCompanionBuilder = WalletsCompanion Function({
   Value<String> walletId,
   required int amount,
   Value<DateTime> createdAt,
@@ -578,65 +646,23 @@ typedef $$WalletsTableUpdateCompanionBuilder = WalletsCompanion Function({
   Value<int> rowid,
 });
 
-class $$WalletsTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $WalletsTable,
-    Wallet,
-    $$WalletsTableFilterComposer,
-    $$WalletsTableOrderingComposer,
-    $$WalletsTableProcessedTableManager,
-    $$WalletsTableInsertCompanionBuilder,
-    $$WalletsTableUpdateCompanionBuilder> {
-  $$WalletsTableTableManager(_$AppDatabase db, $WalletsTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$WalletsTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$WalletsTableOrderingComposer(ComposerState(db, table)),
-          getChildManagerBuilder: (p) => $$WalletsTableProcessedTableManager(p),
-          getUpdateCompanionBuilder: ({
-            Value<String> walletId = const Value.absent(),
-            Value<int> amount = const Value.absent(),
-            Value<DateTime> createdAt = const Value.absent(),
-            Value<int> amountTypeId = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              WalletsCompanion(
-            walletId: walletId,
-            amount: amount,
-            createdAt: createdAt,
-            amountTypeId: amountTypeId,
-            rowid: rowid,
-          ),
-          getInsertCompanionBuilder: ({
-            Value<String> walletId = const Value.absent(),
-            required int amount,
-            Value<DateTime> createdAt = const Value.absent(),
-            required int amountTypeId,
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              WalletsCompanion.insert(
-            walletId: walletId,
-            amount: amount,
-            createdAt: createdAt,
-            amountTypeId: amountTypeId,
-            rowid: rowid,
-          ),
-        ));
-}
+final class $$WalletsTableReferences
+    extends BaseReferences<_$AppDatabase, $WalletsTable, Wallet> {
+  $$WalletsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-class $$WalletsTableProcessedTableManager extends ProcessedTableManager<
-    _$AppDatabase,
-    $WalletsTable,
-    Wallet,
-    $$WalletsTableFilterComposer,
-    $$WalletsTableOrderingComposer,
-    $$WalletsTableProcessedTableManager,
-    $$WalletsTableInsertCompanionBuilder,
-    $$WalletsTableUpdateCompanionBuilder> {
-  $$WalletsTableProcessedTableManager(super.$state);
+  static $AmountTypesTable _amountTypeIdTable(_$AppDatabase db) =>
+      db.amountTypes.createAlias($_aliasNameGenerator(
+          db.wallets.amountTypeId, db.amountTypes.amountTypeId));
+
+  $$AmountTypesTableProcessedTableManager? get amountTypeId {
+    if ($_item.amountTypeId == null) return null;
+    final manager = $$AmountTypesTableTableManager($_db, $_db.amountTypes)
+        .filter((f) => f.amountTypeId($_item.amountTypeId!));
+    final item = $_typedResult.readTableOrNull(_amountTypeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
 }
 
 class $$WalletsTableFilterComposer
@@ -701,9 +727,110 @@ class $$WalletsTableOrderingComposer
   }
 }
 
-class _$AppDatabaseManager {
+class $$WalletsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $WalletsTable,
+    Wallet,
+    $$WalletsTableFilterComposer,
+    $$WalletsTableOrderingComposer,
+    $$WalletsTableCreateCompanionBuilder,
+    $$WalletsTableUpdateCompanionBuilder,
+    (Wallet, $$WalletsTableReferences),
+    Wallet,
+    PrefetchHooks Function({bool amountTypeId})> {
+  $$WalletsTableTableManager(_$AppDatabase db, $WalletsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$WalletsTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$WalletsTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<String> walletId = const Value.absent(),
+            Value<int> amount = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<int> amountTypeId = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WalletsCompanion(
+            walletId: walletId,
+            amount: amount,
+            createdAt: createdAt,
+            amountTypeId: amountTypeId,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            Value<String> walletId = const Value.absent(),
+            required int amount,
+            Value<DateTime> createdAt = const Value.absent(),
+            required int amountTypeId,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              WalletsCompanion.insert(
+            walletId: walletId,
+            amount: amount,
+            createdAt: createdAt,
+            amountTypeId: amountTypeId,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$WalletsTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({amountTypeId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (amountTypeId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.amountTypeId,
+                    referencedTable:
+                        $$WalletsTableReferences._amountTypeIdTable(db),
+                    referencedColumn: $$WalletsTableReferences
+                        ._amountTypeIdTable(db)
+                        .amountTypeId,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$WalletsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $WalletsTable,
+    Wallet,
+    $$WalletsTableFilterComposer,
+    $$WalletsTableOrderingComposer,
+    $$WalletsTableCreateCompanionBuilder,
+    $$WalletsTableUpdateCompanionBuilder,
+    (Wallet, $$WalletsTableReferences),
+    Wallet,
+    PrefetchHooks Function({bool amountTypeId})>;
+
+class $AppDatabaseManager {
   final _$AppDatabase _db;
-  _$AppDatabaseManager(this._db);
+  $AppDatabaseManager(this._db);
   $$AmountTypesTableTableManager get amountTypes =>
       $$AmountTypesTableTableManager(_db, _db.amountTypes);
   $$WalletsTableTableManager get wallets =>
