@@ -61,26 +61,15 @@ parser(String input) {
 }
 
 simpleParser(String input) {
-  final parser = const TokenizerDefinition2().build();
-  final result = parser.parse('\\12345 \\1242222円 \\126円 45we6 asdwa234');
-  // パーサのテスト
-  switch (result) {
-    case Success(value: final value):
-      print('解析成功: $value');
-    // final tokens = result.value.where((token) => token.isNotEmpty).toList();
-    // print('解析された数字: $tokens');
-    case Failure(
-        message: final message,
-        position: final position,
-        buffer: final buffer
-      ):
-      print('解析失敗: $message');
-      print('位置: $position');
-      print('バッファ: $buffer');
-    default:
-      print('解析失敗');
+  List<String> words = input.split(' ');
+  List<String> filteredWords = [];
+  String number = '';
+
+  for (var word in words) {
+    if (word.contains("¥") || word.contains("\\")) {
+      number = word.replaceAll(RegExp(r'[^1-9][0-9]*'), '');
+      filteredWords.add(number);
+    }
   }
-  print(result.value);
-  String res = result.value.toString();
-  return res;
+  return number;
 }
