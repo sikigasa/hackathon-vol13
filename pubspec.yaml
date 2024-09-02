@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.4 <4.0.0'
+  sdk: '>=3.5.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -40,14 +40,14 @@ dependencies:
   google_mlkit_text_recognition: ^0.13.0
   permission_handler: ^11.3.1
   rive: ^0.13.13
-  fl_chart: ^0.68.0
-  drift: ^2.19.1
+  fl_chart: ^0.69.0
+  drift: ^2.20.0
   sqlite3_flutter_libs: ^0.5.24
   path_provider: ^2.1.4
   path: ^1.9.0
   build_runner: ^2.4.12
-  drift_dev: ^2.19.1
-  uuid: ^4.4.2
+  drift_dev: ^2.20.1
+  uuid: ^4.5.0
   petitparser: ^6.0.2
 
 dev_dependencies:
