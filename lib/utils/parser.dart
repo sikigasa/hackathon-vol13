@@ -61,14 +61,15 @@ parser(String input) {
 }
 
 simpleParser(String input) {
-  List<String> words = input.split(' ');
   List<String> filteredWords = [];
   String number = '';
   int highestNumber = 0;
+  String rwords = input.replaceAll(RegExp(r","), "");
+  List<String> words = rwords.split('\n| ');
 
   for (var word in words) {
     if (word.contains("¥") || word.contains("\\") || word.contains("円")) {
-      number = word.replaceAll(RegExp(r'[^0-9]'), '');
+      number = word.replaceAll(RegExp(r'[^0-9] | " "'), '');
       filteredWords.add(number);
       int? filteredNumber = int.tryParse(number);
       if (filteredNumber != null) {
