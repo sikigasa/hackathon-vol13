@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/pages/home/wallet.dart';
 import 'package:hackathon_vol13/database/wallet.dart';
+import 'package:hackathon_vol13/utils/parser.dart';
 
 class HomePage extends StatefulWidget {
   final AppDatabase database;
@@ -61,10 +62,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             database: widget.database,
           ),
           Center(
-            child: Text("It's rainy here"),
+            child: Text(simpleParser("1, 000円 \n 500円")),
           ),
           Center(
-            child: Text("It's sunny here"),
+            child: Text("It's rain here"),
           ),
           Text("data"),
         ],
