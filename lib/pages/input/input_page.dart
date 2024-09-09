@@ -113,7 +113,7 @@ class _InputFormState extends State<InputForm> {
               print(date);
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           TextFormField(
@@ -133,7 +133,7 @@ class _InputFormState extends State<InputForm> {
               _amount = int.parse(price);
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           DropdownButtonFormField(
