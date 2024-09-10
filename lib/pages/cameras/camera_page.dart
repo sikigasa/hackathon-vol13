@@ -50,6 +50,7 @@ class _CameraState extends State<CameraPage> {
     );
 
     _recognizedText = await _textRecognizer.processImage(inputImage);
+    print(_recognizedText!.text);
     if (!mounted) return;
     setState(() {
       skipScanning = false;
@@ -152,7 +153,7 @@ class _CameraState extends State<CameraPage> {
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.all(20),
                       child: Text(_recognizedText != null
-                          ? parser(_recognizedText!.text)
+                          ? simpleParser(_recognizedText!.text)
                           : ''),
                     ),
                   )
