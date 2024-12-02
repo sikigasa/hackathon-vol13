@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Hackathon Vol.13',
+      title: 'LightWalletBook',
       theme: ThemeData.dark(
         useMaterial3: true,
       ),
