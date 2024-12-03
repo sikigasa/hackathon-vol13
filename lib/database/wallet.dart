@@ -59,18 +59,40 @@ class AppDatabase extends _$AppDatabase {
   get walletDao => null;
 }
 
-/// データベースから全てのメモをストリームとして取得する。
-/// メモが追加、更新、削除されると、このストリームは新しいリストを返す。
+// 新しいwalletTypeをデータベースに挿入する
+Future insertAmountType(AppDatabase db, String title) {
+  return db.into(db.amountTypes).insert(
+        AmountTypesCompanion.insert(title: title),
+      );
+}
+
+// データベースから全てのwalletTypeを取得する
+Future<List<AmountType>> getAllAmountTypes(AppDatabase db) {
+  return db.select(db.amountTypes).get();
+}
+
+// Stream版
+Stream<List<AmountType>> watchAllAmountTypes(AppDatabase db) {
+  return db.select(db.amountTypes).watch();
+}
+
+// walletTypeを削除する: Todo
+Future deleteAmountType(AppDatabase db, AmountType amountType) {
+  return db.delete(db.amountTypes).delete(amountType);
+}
+
+// データベースから全てのメモをストリームとして取得する。
+// メモが追加、更新、削除されると、このストリームは新しいリストを返す。
 Stream<List<Wallet>> watchAllWallets(AppDatabase db) {
   return db.select(db.wallets).watch();
 }
 
-/// データベースから全ての金額を一度だけ取得する。
+// データベースから全ての金額を一度だけ取得する。
 Future<List<Wallet>> getAllWallets(AppDatabase db) {
   return db.select(db.wallets).get();
 }
 
-/// 新しい購入履歴をデータベースに挿入する。
+// 新しい購入履歴をデータベースに挿入する。
 // Future insertWallet(AppDatabase db, Wallet wallet) {
 //   return db.into(db.wallets).insert(wallet);
 // }
@@ -88,12 +110,12 @@ Future updateWallet(AppDatabase db, Wallet wallet) {
   return db.update(db.wallets).replace(wallet);
 }
 
-/// データベースからメモを削除する。
+// データベースからメモを削除する。
 Future deleteWallet(AppDatabase db, Wallet wallet) {
   return db.delete(db.wallets).delete(wallet);
 }
 
-/// アプリのドキュメントディレクトリにデータベースファイルを生成し、接続する。
+// アプリのドキュメントディレクトリにデータベースファイルを生成し、接続する。
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
