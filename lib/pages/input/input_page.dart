@@ -22,7 +22,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           price = await Navigator.push(
             context,
             MaterialPageRoute<String>(
-              builder: (context) => CameraPage(),
+              builder: (context) => const CameraPage(),
             ),
           );
           if (price != null) {
