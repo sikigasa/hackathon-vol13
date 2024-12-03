@@ -47,7 +47,6 @@ class InputForm extends StatefulWidget {
 
 class _InputFormState extends State<InputForm> {
   final _formKey = GlobalKey<FormState>();
-  final items = ["item1", "item2", "item3"];
   final textEditingController = TextEditingController(
       text:
           '${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}');
@@ -85,7 +84,7 @@ class _InputFormState extends State<InputForm> {
   int _amount = 0;
   @override
   Widget build(BuildContext context) {
-    Future<List<String>> get() async {
+    Future<List<String>> getAmountTypes() async {
       final items =
           await widget.database.select(widget.database.amountTypes).get();
       List<String> itemNames = items
@@ -94,6 +93,8 @@ class _InputFormState extends State<InputForm> {
       print(itemNames);
       return itemNames;
     }
+
+    var amountTypes = getAmountTypes();
 
     print(widget.price);
     return Form(
@@ -136,22 +137,33 @@ class _InputFormState extends State<InputForm> {
           const SizedBox(
             height: 20,
           ),
-          DropdownButtonFormField(
-            decoration: const InputDecoration(
-              hintText: 'Enter item',
-            ),
-            value: items[0],
-            onChanged: (String? newValue) {
-              setState(() {
-                items[0] = newValue!;
-              });
+          FutureBuilder<List<String>>(
+            future: amountTypes,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                return DropdownButtonFormField(
+                  decoration: const InputDecoration(
+                    hintText: 'Enter item',
+                  ),
+                  value: snapshot.data![0],
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      snapshot.data![0] = newValue!;
+                    });
+                  },
+                  items: snapshot.data!.map((String value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                );
+              }
             },
-            items: items.map((String value) {
-              return DropdownMenuItem(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
