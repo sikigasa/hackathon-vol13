@@ -76,6 +76,11 @@ Stream<List<AmountType>> watchAllAmountTypes(AppDatabase db) {
   return db.select(db.amountTypes).watch();
 }
 
+// walletTypeを更新する
+Future updateAmountType(AppDatabase db, AmountType amountType) {
+  return db.update(db.amountTypes).replace(amountType);
+}
+
 // walletTypeを削除する: Todo
 Future deleteAmountType(AppDatabase db, AmountType amountType) {
   return db.delete(db.amountTypes).delete(amountType);
