@@ -5,3 +5,6 @@ migrate:
 
 migrate-watch:
 	dart run build_runner watch -d
+
+database-migrate:
+	flutter pub run build_runner build --delete-conflicting-outputs
