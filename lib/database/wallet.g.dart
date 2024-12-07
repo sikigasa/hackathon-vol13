@@ -513,44 +513,94 @@ final class $$AmountTypesTableReferences
 }
 
 class $$AmountTypesTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $AmountTypesTable> {
-  $$AmountTypesTableFilterComposer(super.$state);
-  ColumnFilters<int> get amountTypeId => $state.composableBuilder(
-      column: $state.table.amountTypeId,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+    extends Composer<_$AppDatabase, $AmountTypesTable> {
+  $$AmountTypesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get amountTypeId => $composableBuilder(
+      column: $table.amountTypeId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get title => $state.composableBuilder(
-      column: $state.table.title,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnFilters(column));
 
-  ComposableFilter walletsRefs(
-      ComposableFilter Function($$WalletsTableFilterComposer f) f) {
-    final $$WalletsTableFilterComposer composer = $state.composerBuilder(
+  Expression<bool> walletsRefs(
+      Expression<bool> Function($$WalletsTableFilterComposer f) f) {
+    final $$WalletsTableFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.amountTypeId,
-        referencedTable: $state.db.wallets,
+        referencedTable: $db.wallets,
         getReferencedColumn: (t) => t.amountTypeId,
-        builder: (joinBuilder, parentComposers) => $$WalletsTableFilterComposer(
-            ComposerState(
-                $state.db, $state.db.wallets, joinBuilder, parentComposers)));
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$WalletsTableFilterComposer(
+              $db: $db,
+              $table: $db.wallets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
     return f(composer);
   }
 }
 
 class $$AmountTypesTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $AmountTypesTable> {
-  $$AmountTypesTableOrderingComposer(super.$state);
-  ColumnOrderings<int> get amountTypeId => $state.composableBuilder(
-      column: $state.table.amountTypeId,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+    extends Composer<_$AppDatabase, $AmountTypesTable> {
+  $$AmountTypesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get amountTypeId => $composableBuilder(
+      column: $table.amountTypeId,
+      builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get title => $state.composableBuilder(
-      column: $state.table.title,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<String> get title => $composableBuilder(
+      column: $table.title, builder: (column) => ColumnOrderings(column));
+}
+
+class $$AmountTypesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AmountTypesTable> {
+  $$AmountTypesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get amountTypeId => $composableBuilder(
+      column: $table.amountTypeId, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  Expression<T> walletsRefs<T extends Object>(
+      Expression<T> Function($$WalletsTableAnnotationComposer a) f) {
+    final $$WalletsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.amountTypeId,
+        referencedTable: $db.wallets,
+        getReferencedColumn: (t) => t.amountTypeId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$WalletsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.wallets,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$AmountTypesTableTableManager extends RootTableManager<
@@ -559,6 +609,7 @@ class $$AmountTypesTableTableManager extends RootTableManager<
     AmountType,
     $$AmountTypesTableFilterComposer,
     $$AmountTypesTableOrderingComposer,
+    $$AmountTypesTableAnnotationComposer,
     $$AmountTypesTableCreateCompanionBuilder,
     $$AmountTypesTableUpdateCompanionBuilder,
     (AmountType, $$AmountTypesTableReferences),
@@ -568,10 +619,12 @@ class $$AmountTypesTableTableManager extends RootTableManager<
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$AmountTypesTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$AmountTypesTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$AmountTypesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AmountTypesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AmountTypesTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> amountTypeId = const Value.absent(),
             Value<String> title = const Value.absent(),
@@ -626,6 +679,7 @@ typedef $$AmountTypesTableProcessedTableManager = ProcessedTableManager<
     AmountType,
     $$AmountTypesTableFilterComposer,
     $$AmountTypesTableOrderingComposer,
+    $$AmountTypesTableAnnotationComposer,
     $$AmountTypesTableCreateCompanionBuilder,
     $$AmountTypesTableUpdateCompanionBuilder,
     (AmountType, $$AmountTypesTableReferences),
@@ -654,8 +708,7 @@ final class $$WalletsTableReferences
       db.amountTypes.createAlias($_aliasNameGenerator(
           db.wallets.amountTypeId, db.amountTypes.amountTypeId));
 
-  $$AmountTypesTableProcessedTableManager? get amountTypeId {
-    if ($_item.amountTypeId == null) return null;
+  $$AmountTypesTableProcessedTableManager get amountTypeId {
     final manager = $$AmountTypesTableTableManager($_db, $_db.amountTypes)
         .filter((f) => f.amountTypeId($_item.amountTypeId!));
     final item = $_typedResult.readTableOrNull(_amountTypeIdTable($_db));
@@ -666,63 +719,118 @@ final class $$WalletsTableReferences
 }
 
 class $$WalletsTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $WalletsTable> {
-  $$WalletsTableFilterComposer(super.$state);
-  ColumnFilters<String> get walletId => $state.composableBuilder(
-      column: $state.table.walletId,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+    extends Composer<_$AppDatabase, $WalletsTable> {
+  $$WalletsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get walletId => $composableBuilder(
+      column: $table.walletId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<int> get amount => $state.composableBuilder(
-      column: $state.table.amount,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<int> get amount => $composableBuilder(
+      column: $table.amount, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<DateTime> get createdAt => $state.composableBuilder(
-      column: $state.table.createdAt,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
 
   $$AmountTypesTableFilterComposer get amountTypeId {
-    final $$AmountTypesTableFilterComposer composer = $state.composerBuilder(
+    final $$AmountTypesTableFilterComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.amountTypeId,
-        referencedTable: $state.db.amountTypes,
+        referencedTable: $db.amountTypes,
         getReferencedColumn: (t) => t.amountTypeId,
-        builder: (joinBuilder, parentComposers) =>
-            $$AmountTypesTableFilterComposer(ComposerState($state.db,
-                $state.db.amountTypes, joinBuilder, parentComposers)));
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AmountTypesTableFilterComposer(
+              $db: $db,
+              $table: $db.amountTypes,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
     return composer;
   }
 }
 
 class $$WalletsTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $WalletsTable> {
-  $$WalletsTableOrderingComposer(super.$state);
-  ColumnOrderings<String> get walletId => $state.composableBuilder(
-      column: $state.table.walletId,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+    extends Composer<_$AppDatabase, $WalletsTable> {
+  $$WalletsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get walletId => $composableBuilder(
+      column: $table.walletId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<int> get amount => $state.composableBuilder(
-      column: $state.table.amount,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<int> get amount => $composableBuilder(
+      column: $table.amount, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<DateTime> get createdAt => $state.composableBuilder(
-      column: $state.table.createdAt,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
 
   $$AmountTypesTableOrderingComposer get amountTypeId {
-    final $$AmountTypesTableOrderingComposer composer = $state.composerBuilder(
+    final $$AmountTypesTableOrderingComposer composer = $composerBuilder(
         composer: this,
         getCurrentColumn: (t) => t.amountTypeId,
-        referencedTable: $state.db.amountTypes,
+        referencedTable: $db.amountTypes,
         getReferencedColumn: (t) => t.amountTypeId,
-        builder: (joinBuilder, parentComposers) =>
-            $$AmountTypesTableOrderingComposer(ComposerState($state.db,
-                $state.db.amountTypes, joinBuilder, parentComposers)));
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AmountTypesTableOrderingComposer(
+              $db: $db,
+              $table: $db.amountTypes,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$WalletsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WalletsTable> {
+  $$WalletsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get walletId =>
+      $composableBuilder(column: $table.walletId, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  $$AmountTypesTableAnnotationComposer get amountTypeId {
+    final $$AmountTypesTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.amountTypeId,
+        referencedTable: $db.amountTypes,
+        getReferencedColumn: (t) => t.amountTypeId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$AmountTypesTableAnnotationComposer(
+              $db: $db,
+              $table: $db.amountTypes,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
     return composer;
   }
 }
@@ -733,6 +841,7 @@ class $$WalletsTableTableManager extends RootTableManager<
     Wallet,
     $$WalletsTableFilterComposer,
     $$WalletsTableOrderingComposer,
+    $$WalletsTableAnnotationComposer,
     $$WalletsTableCreateCompanionBuilder,
     $$WalletsTableUpdateCompanionBuilder,
     (Wallet, $$WalletsTableReferences),
@@ -742,10 +851,12 @@ class $$WalletsTableTableManager extends RootTableManager<
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$WalletsTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$WalletsTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$WalletsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WalletsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WalletsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> walletId = const Value.absent(),
             Value<int> amount = const Value.absent(),
@@ -793,6 +904,7 @@ class $$WalletsTableTableManager extends RootTableManager<
                       dynamic,
                       dynamic,
                       dynamic,
+                      dynamic,
                       dynamic>>(state) {
                 if (amountTypeId) {
                   state = state.withJoin(
@@ -822,6 +934,7 @@ typedef $$WalletsTableProcessedTableManager = ProcessedTableManager<
     Wallet,
     $$WalletsTableFilterComposer,
     $$WalletsTableOrderingComposer,
+    $$WalletsTableAnnotationComposer,
     $$WalletsTableCreateCompanionBuilder,
     $$WalletsTableUpdateCompanionBuilder,
     (Wallet, $$WalletsTableReferences),
