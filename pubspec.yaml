@@ -38,7 +38,7 @@ dependencies:
   camera: ^0.10.6
   google_mlkit_text_recognition: ^0.14.0
   permission_handler: ^11.3.1
-  rive: ^0.13.20
+  rive: ^0.13.13
   fl_chart: ^0.69.2
   drift: ^2.22.1
   sqlite3_flutter_libs: ^0.5.27
