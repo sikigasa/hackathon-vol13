@@ -66,7 +66,7 @@ class WalletCard extends StatelessWidget {
                         (BuildContext context, AsyncSnapshot<int> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         // データがまだ取得されていない場合の表示
-                        return CircularProgressIndicator();
+                        return const CircularProgressIndicator();
                       } else if (snapshot.hasError) {
                         // エラーが発生した場合の表示
                         return Text('${snapshot.error}',

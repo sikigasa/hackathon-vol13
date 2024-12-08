@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late final TabController _tabController;
-  int _tabLength = 4;
+  final int _tabLength = 4;
 
   @override
   void initState() {
@@ -64,10 +64,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Center(
             child: Text(simpleParser("1, 000円 \n 500円 \n 100円")),
           ),
-          Center(
+          const Center(
             child: Text("It's rain here"),
           ),
-          Text("data"),
+          const Text("data"),
         ],
       ),
     );

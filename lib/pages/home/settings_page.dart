@@ -5,7 +5,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('flutter widget'),
+        title: const Text('flutter widget'),
       ),
       body: Container(
         color: Colors.blue,

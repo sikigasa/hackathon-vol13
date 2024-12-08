@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 
 part 'wallet.g.dart';
 
-final _uuid = Uuid();
+final _uuid = const Uuid();
 
 // @DataClassName('Wallet')
 class Wallets extends Table {

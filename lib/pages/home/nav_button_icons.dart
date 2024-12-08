@@ -106,7 +106,7 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
                 color: Colors.black.withOpacity(0.3),
                 spreadRadius: 1,
                 blurRadius: 20,
-                offset: Offset(0, 20),
+                offset: const Offset(0, 20),
               ),
             ],
           ),
