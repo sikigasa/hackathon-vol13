@@ -159,7 +159,6 @@ class _InputFormState extends State<InputForm> {
                       onChanged: (String? newValue) {
                         setState(() {
                           dropDownText = newValue!;
-                          print(newValue);
                         });
                       },
                       items: snapshot.data!.map((String value) {
