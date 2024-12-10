@@ -64,8 +64,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           Center(
             child: Text(simpleParser("1, 000円 \n 500円 \n 100円")),
           ),
-          const Center(
-            child: Text("It's rain here"),
+          WalletPage(
+            database: widget.database,
           ),
           const Text("data"),
         ],
