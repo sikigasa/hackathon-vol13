@@ -90,11 +90,12 @@ class _InputFormState extends State<InputForm> {
       List<String> itemNames = items
           .map((amount) => amount.title.toString()) // 文字列に変換
           .toList();
-      print(itemNames);
+      print("priceType: " + itemNames.toString());
       return itemNames;
     }
 
     var amountTypes = getAmountTypes();
+    var dropDownText = "Enter wallet type";
 
     print(widget.price);
     return Form(
@@ -138,29 +139,37 @@ class _InputFormState extends State<InputForm> {
             height: 20,
           ),
           FutureBuilder<List<String>>(
-            future: amountTypes,
+            future: getAllAmountTypes(widget.database).then(
+              (amountTypes) =>
+                  amountTypes.map((amount) => amount.title.toString()).toList(),
+            ),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator();
               } else if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else {
-                return DropdownButtonFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Enter item',
-                  ),
-                  value: snapshot.data![0],
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      snapshot.data![0] = newValue!;
-                    });
-                  },
-                  items: snapshot.data!.map((String value) {
-                    return DropdownMenuItem(
-                      value: value,
-                      child: Text(value),
+                return StatefulBuilder(
+                  builder: (context, setState) {
+                    return DropdownButtonFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Enter item',
+                      ),
+                      value: dropDownText = snapshot.data![0],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          dropDownText = newValue!;
+                          print(newValue);
+                        });
+                      },
+                      items: snapshot.data!.map((String value) {
+                        return DropdownMenuItem(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     );
-                  }).toList(),
+                  },
                 );
               }
             },
