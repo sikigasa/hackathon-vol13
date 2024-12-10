@@ -16,6 +16,8 @@ InputImage convert({
   final Size imageSize =
       Size(cameraImage.width.toDouble(), cameraImage.height.toDouble());
 
+  final fixBytes = Nv21Converter(cameraImage).getNv21Uint8List();
+
   final InputImageRotation imageRotation =
       InputImageRotationValue.fromRawValue(camera.sensorOrientation) ??
           InputImageRotation.rotation0deg;
@@ -43,7 +45,7 @@ InputImage convert({
   );
 
   final inputImage =
-      InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
+      InputImage.fromBytes(bytes: fixBytes, metadata: inputImageData);
 
   return inputImage;
 }
