@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/pages/home/wallet.dart';
 import 'package:hackathon_vol13/database/wallet.dart';
 import 'package:hackathon_vol13/utils/parser.dart';
+import 'package:hackathon_vol13/database/wallet.dart';
 
 class HomePage extends StatefulWidget {
   final AppDatabase database;
@@ -13,15 +14,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late final TabController _tabController;
-  final int _tabLength = 4;
+  late int _tabLength;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: _tabLength, // タブの数
-      vsync: this, // 動作させるアニメーションの種類
-    );
+    watchAllAmountTypes(widget.database).length.then((length) {
+      setState(() {
+        _tabLength = length;
+        _tabController = TabController(
+          length: _tabLength, // タブの数
+          vsync: this, // 動作させるアニメーションの種類
+        );
+      });
+    });
   }
 
   @override
@@ -58,6 +64,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
+          ...List.generate(
+              _tabLength,
+              (index) => WalletPage(
+                    database: widget.database,
+                  )),
           WalletPage(
             database: widget.database,
           ),
