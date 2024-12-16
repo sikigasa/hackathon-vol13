@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:hackathon_vol13/utils/camera.dart';
+import 'package:hackathon_vol13/utils/camera2.dart';
 import 'package:hackathon_vol13/utils/parser.dart';
 
 List<CameraDescription> cameras = [];
@@ -44,12 +45,15 @@ class _CameraState extends State<CameraPage> {
       skipScanning = true;
     });
 
-    final inputImage = convert(
-      camera: cameras[0],
-      cameraImage: availableImage,
-    );
+    // final inputImage = convert(
+    //   camera: cameras[0],
+    //   cameraImage: availableImage,
+    // );
 
-    _recognizedText = await _textRecognizer.processImage(inputImage);
+    final inputImage = cameraImageToInputImage(
+        availableImage, cameras[0], _controller.value.deviceOrientation);
+
+    _recognizedText = await _textRecognizer.processImage(inputImage!);
     print(_recognizedText!.text);
     if (!mounted) return;
     setState(() {
