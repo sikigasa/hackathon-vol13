@@ -13,12 +13,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  late final TabController _tabController;
-  late int _tabLength;
+  late TabController _tabController;
+  late int _tabLength = 0;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(
+      length: 4, // タブの数
+      vsync: this, // 動作させるアニメーションの種類
+    );
     watchAllAmountTypes(widget.database).length.then((length) {
       setState(() {
         _tabLength = length;

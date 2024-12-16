@@ -97,7 +97,6 @@ class _InputFormState extends State<InputForm> {
     var amountTypes = getAmountTypes();
     var dropDownText = "Enter wallet type";
 
-    print(widget.price);
     return Form(
       key: _formKey,
       child: Column(
