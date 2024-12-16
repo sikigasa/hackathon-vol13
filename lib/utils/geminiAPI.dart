@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 final model = GenerativeModel(
-  model: 'AIzaSyCpuFcemhcEw9PVcCm5mf6cho_79xecUBo',
+  model: 'gemini-1.5-flash',
   apiKey: "apiKey",
 );
 
