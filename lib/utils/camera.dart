@@ -45,7 +45,7 @@ InputImage convert({
   );
 
   final inputImage =
-      InputImage.fromBytes(bytes: fixBytes, metadata: inputImageData);
+      InputImage.fromBytes(bytes: bytes, metadata: inputImageData);
 
   return inputImage;
 }
