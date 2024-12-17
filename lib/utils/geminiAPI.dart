@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 final model = GenerativeModel(
@@ -11,8 +12,9 @@ Future<DataPart> fileToPart(String mimeType, String path) async {
 }
 
 final prompt = 'This image is receipt. Please convert it to text.';
-itoTextWithGemini(InputImage image) async {
-  final image = await fileToPart('image/jpeg', 'resources/jetpack.jpg');
+itoTextWithGemini(CameraImage cameraImage) async {
+  final image = await fileToPart(
+      'image/jpeg', 'path/to/image.jpg'); // Convert CameraImage to DataPart
 
   final response = await model.generateContent([
     Content.multi([TextPart(prompt), image])
