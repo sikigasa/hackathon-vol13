@@ -4,7 +4,7 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 
 final model = GenerativeModel(
   model: 'gemini-1.5-flash',
-  apiKey: "apiKey",
+  apiKey: Platform.environment['GEMINI_API_KEY'] ?? '',
 );
 
 Future<DataPart> fileToPart(String mimeType, String path) async {

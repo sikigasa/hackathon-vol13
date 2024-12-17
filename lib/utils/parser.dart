@@ -55,7 +55,7 @@ parser(String input) {
     default:
       print('解析失敗');
   }
-  print(result.value);
+  print("文字解析出力: " + result.value);
   String res = result.value.toString();
   return res;
 }
