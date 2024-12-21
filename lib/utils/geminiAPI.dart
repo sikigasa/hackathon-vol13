@@ -11,13 +11,13 @@ Future<DataPart> fileToPart(String mimeType, String path) async {
   return DataPart(mimeType, await File(path).readAsBytes());
 }
 
-final prompt = 'This image is receipt. Please convert it to text.';
+final prompt = 'This image is receipt. Please give the total amount.';
 itoTextWithGemini(CameraImage cameraImage) async {
-  final image = await fileToPart(
-      'image/jpeg', 'path/to/image.jpg'); // Convert CameraImage to DataPart
+  // Convert CameraImage to DataPart
+  final image = DataPart('image/jpeg', cameraImage.planes[0].bytes);
 
   final response = await model.generateContent([
     Content.multi([TextPart(prompt), image])
   ]);
-  print(response.text);
+  return response.text;
 }
