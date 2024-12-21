@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:hackathon_vol13/utils/convertJpeg.dart';
 
 final model = GenerativeModel(
   model: 'gemini-1.5-flash',
@@ -11,10 +12,11 @@ Future<DataPart> fileToPart(String mimeType, String path) async {
   return DataPart(mimeType, await File(path).readAsBytes());
 }
 
-final prompt = 'This image is receipt. Please give the total amount.';
+final prompt = 'This image is a Japanese receipt. What is the total amount?';
 itoTextWithGemini(CameraImage cameraImage) async {
   // Convert CameraImage to DataPart
-  final image = DataPart('image/jpeg', cameraImage.planes[0].bytes);
+  final jpegBytes = await convertCameraImageToJpeg(cameraImage);
+  final image = DataPart('image/jpeg', jpegBytes);
 
   final response = await model.generateContent([
     Content.multi([TextPart(prompt), image])
