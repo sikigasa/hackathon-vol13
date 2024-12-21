@@ -12,10 +12,11 @@ Future<DataPart> fileToPart(String mimeType, String path) async {
   return DataPart(mimeType, await File(path).readAsBytes());
 }
 
-final prompt = 'This image is a Japanese receipt. What is the total amount?';
+final prompt = 'この写真は何ですか?';
 itoTextWithGemini(CameraImage cameraImage) async {
   // Convert CameraImage to DataPart
-  final jpegBytes = await convertCameraImageToJpeg(cameraImage);
+  final jpegBytes = convertRgbToJpeg(
+      yuv420ToRgb(cameraImage), cameraImage.width, cameraImage.height);
   final image = DataPart('image/jpeg', jpegBytes);
 
   final response = await model.generateContent([

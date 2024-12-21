@@ -71,12 +71,12 @@ class _CameraState extends State<CameraPage> {
       });
     }
     // gemini
-    if (geminiResponse.isNotEmpty) {
-      _controller.stopImageStream();
-      setState(() {
-        isScanned = true;
-      });
-    }
+    // if (geminiResponse.isNotEmpty) {
+    //   _controller.stopImageStream();
+    //   setState(() {
+    //     isScanned = true;
+    //   });
+    // }
   }
 
   Future<void> _setup() async {

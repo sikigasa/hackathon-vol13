@@ -19,6 +19,8 @@ Future<Uint8List> convertCameraImageToJpeg(CameraImage cameraImage) async {
       cameraImage.width,
       cameraImage.height,
     ).buffer,
+    format: img.Format.uint8,
+    order: img.ChannelOrder.bgra,
   );
 
   // JPEGエンコード
@@ -56,4 +58,55 @@ Uint8List _convertYUV420toRGB(Uint8List yPlane, Uint8List uPlane,
   }
 
   return rgb;
+}
+
+Uint8List yuv420ToRgb(CameraImage cameraImage) {
+  final int width = cameraImage.width;
+  final int height = cameraImage.height;
+
+  final Uint8List yPlane = cameraImage.planes[0].bytes;
+  final Uint8List uPlane = cameraImage.planes[1].bytes;
+  final Uint8List vPlane = cameraImage.planes[2].bytes;
+
+  final int uvRowStride = cameraImage.planes[1].bytesPerRow;
+  final int uvPixelStride = cameraImage.planes[1].bytesPerPixel!;
+
+  final Uint8List rgbBytes = Uint8List(width * height * 3); // RGBは3バイト/ピクセル
+
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      final int yIndex = y * width + x;
+      final int uvIndex = (y ~/ 2) * uvRowStride + (x ~/ 2) * uvPixelStride;
+
+      final int yValue = yPlane[yIndex] & 0xFF;
+      final int uValue = uPlane[uvIndex] & 0xFF;
+      final int vValue = vPlane[uvIndex] & 0xFF;
+
+      final int r = (yValue + 1.402 * (vValue - 128)).round().clamp(0, 255);
+      final int g =
+          (yValue - 0.344136 * (uValue - 128) - 0.714136 * (vValue - 128))
+              .round()
+              .clamp(0, 255);
+      final int b = (yValue + 1.772 * (uValue - 128)).round().clamp(0, 255);
+
+      final int rgbIndex = yIndex * 3;
+      rgbBytes[rgbIndex] = r;
+      rgbBytes[rgbIndex + 1] = g;
+      rgbBytes[rgbIndex + 2] = b;
+    }
+  }
+
+  return rgbBytes;
+}
+
+Uint8List convertRgbToJpeg(Uint8List rgbData, int width, int height) {
+  // RGBデータをImageオブジェクトに変換
+  final image =
+      img.Image.fromBytes(width: width, height: height, bytes: rgbData.buffer);
+
+  // ImageをJPEGにエンコード
+  final jpegBytes = img.encodeJpg(image);
+
+  // Uint8Listとして返す
+  return Uint8List.fromList(jpegBytes);
 }
