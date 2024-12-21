@@ -15,8 +15,14 @@ Future<DataPart> fileToPart(String mimeType, String path) async {
 final prompt = 'この写真は何ですか?';
 itoTextWithGemini(CameraImage cameraImage) async {
   // Convert CameraImage to DataPart
-  final jpegBytes = await convertCameraImageToJpeg(cameraImage);
+  final rgbImage = ImageUtils.convertCameraImage(cameraImage);
+  final jpegBytes = convertRgbToJpeg(
+      rgbImage.getBytes(), cameraImage.width, cameraImage.height);
+  // final jpegBytes = await convertCameraImageToJpeg(cameraImage);
   final image = DataPart('image/jpeg', jpegBytes);
+
+  // debug save jpeg
+  // saveJpeg(jpegBytes);
 
   final response = await model.generateContent([
     Content.multi([TextPart(prompt), image])
