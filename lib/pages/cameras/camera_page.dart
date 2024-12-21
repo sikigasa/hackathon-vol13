@@ -3,7 +3,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:hackathon_vol13/utils/camera.dart';
+import 'package:hackathon_vol13/utils/geminiAPI.dart';
 import 'package:hackathon_vol13/utils/camera2.dart';
 import 'package:hackathon_vol13/utils/parser.dart';
 
@@ -53,13 +53,25 @@ class _CameraState extends State<CameraPage> {
     final inputImage = cameraImageToInputImage(
         availableImage, cameras[0], _controller.value.deviceOrientation);
 
+    final String geminiResponse = await itoTextWithGemini(availableImage);
+    print("gemini: $geminiResponse");
+
+    // use MLkit
     _recognizedText = await _textRecognizer.processImage(inputImage!);
-    print(_recognizedText!.text);
+    // print(_recognizedText!.text);
     if (!mounted) return;
     setState(() {
       skipScanning = false;
     });
+    // mlkit
     if (_recognizedText != null && _recognizedText!.text.isNotEmpty) {
+      _controller.stopImageStream();
+      setState(() {
+        isScanned = true;
+      });
+    }
+    // gemini
+    if (geminiResponse.isNotEmpty) {
       _controller.stopImageStream();
       setState(() {
         isScanned = true;
@@ -156,9 +168,8 @@ class _CameraState extends State<CameraPage> {
                     flex: 1,
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.all(20),
-                      child: Text(_recognizedText != null
-                          ? simpleParser(_recognizedText!.text)
-                          : ''),
+                      child: Text(
+                          _recognizedText != null ? _recognizedText!.text : ''),
                     ),
                   )
                 ]),
