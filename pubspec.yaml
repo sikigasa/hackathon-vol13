@@ -50,6 +50,8 @@ dependencies:
   petitparser: ^6.0.2
   google_generative_ai: ^0.4.6
   image: ^4.5.2
+  photo_manager: ^3.6.3
+  external_path: ^2.0.1
 
 dev_dependencies:
   flutter_test:
