@@ -90,7 +90,7 @@ class _InputFormState extends State<InputForm> {
       List<String> itemNames = items
           .map((amount) => amount.title.toString()) // 文字列に変換
           .toList();
-      print("priceType: " + itemNames.toString());
+      print("priceType: $itemNames");
       return itemNames;
     }
 

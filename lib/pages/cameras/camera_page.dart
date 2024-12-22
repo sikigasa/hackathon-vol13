@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:hackathon_vol13/utils/geminiAPI.dart';
 import 'package:hackathon_vol13/utils/camera2.dart';
-import 'package:hackathon_vol13/utils/parser.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -59,6 +58,7 @@ class _CameraState extends State<CameraPage> {
     // use MLkit
     _recognizedText = await _textRecognizer.processImage(inputImage!);
     // print(_recognizedText!.text);
+
     if (!mounted) return;
     setState(() {
       skipScanning = false;
