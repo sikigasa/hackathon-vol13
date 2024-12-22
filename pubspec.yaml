@@ -39,12 +39,12 @@ dependencies:
   google_mlkit_text_recognition: ^0.14.0 # broken this ^0.14.0 err: PlatformException (PlatformException(InputImageConverterError, java.lang.IllegalArgumentException, null, null))
   permission_handler: ^11.3.1
   rive: ^0.13.13
-  fl_chart: ^0.69.2
+  fl_chart: ^0.70.0
   drift: ^2.22.1
   sqlite3_flutter_libs: ^0.5.27
   path_provider: ^2.1.5
   path: ^1.9.0
-  build_runner: ^2.4.13
+  build_runner: ^2.4.14
   drift_dev: ^2.22.1
   uuid: ^4.5.1
   petitparser: ^6.0.2
