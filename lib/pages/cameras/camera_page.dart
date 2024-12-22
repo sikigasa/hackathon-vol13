@@ -24,6 +24,7 @@ class _CameraState extends State<CameraPage> {
   bool skipScanning = false;
   bool isScanned = false;
   RecognizedText? _recognizedText;
+  String? _geminiResponse;
 
   @override
   void initState() {
@@ -49,14 +50,14 @@ class _CameraState extends State<CameraPage> {
     //   cameraImage: availableImage,
     // );
 
-    final inputImage = cameraImageToInputImage(
-        availableImage, cameras[0], _controller.value.deviceOrientation);
+    // final inputImage = cameraImageToInputImage(
+    //     availableImage, cameras[0], _controller.value.deviceOrientation);
 
-    final String geminiResponse = await itoTextWithGemini(availableImage);
-    print("gemini: $geminiResponse");
+    _geminiResponse = await itoTextWithGemini(availableImage);
+    print("gemini: $_geminiResponse");
 
     // use MLkit
-    _recognizedText = await _textRecognizer.processImage(inputImage!);
+    // _recognizedText = await _textRecognizer.processImage(inputImage!);
     // print(_recognizedText!.text);
 
     if (!mounted) return;
@@ -64,19 +65,19 @@ class _CameraState extends State<CameraPage> {
       skipScanning = false;
     });
     // mlkit
-    if (_recognizedText != null && _recognizedText!.text.isNotEmpty) {
-      _controller.stopImageStream();
-      setState(() {
-        isScanned = true;
-      });
-    }
-    // gemini
-    // if (geminiResponse.isNotEmpty) {
+    // if (_recognizedText != null && _recognizedText!.text.isNotEmpty) {
     //   _controller.stopImageStream();
     //   setState(() {
     //     isScanned = true;
     //   });
     // }
+    // gemini
+    if (_geminiResponse != null && _geminiResponse!.isNotEmpty) {
+      _controller.stopImageStream();
+      setState(() {
+        isScanned = true;
+      });
+    }
   }
 
   Future<void> _setup() async {
@@ -147,7 +148,7 @@ class _CameraState extends State<CameraPage> {
                                   onPressed: () {
                                     setState(() {
                                       isScanned = false;
-                                      _recognizedText = null;
+                                      _geminiResponse = null;
                                     });
                                     _controller.startImageStream(_processImage);
                                   },
@@ -155,8 +156,7 @@ class _CameraState extends State<CameraPage> {
                                 ElevatedButton(
                                   child: const Text('登録する'),
                                   onPressed: () {
-                                    Navigator.pop(
-                                        context, _recognizedText!.text);
+                                    Navigator.pop(context, _geminiResponse!);
                                   },
                                 ),
                               ],
@@ -169,7 +169,8 @@ class _CameraState extends State<CameraPage> {
                     child: SingleChildScrollView(
                       padding: const EdgeInsets.all(20),
                       child: Text(
-                          _recognizedText != null ? _recognizedText!.text : ''),
+                          // _recognizedText != null ? _recognizedText!.text : ''),
+                          _geminiResponse != null ? _geminiResponse! : ''),
                     ),
                   )
                 ]),
