@@ -52,8 +52,6 @@ parser(String input) {
       print('解析失敗: $message');
       print('位置: $position');
       print('バッファ: $buffer');
-    default:
-      print('解析失敗');
   }
   print("文字解析出力: " + result.value);
   String res = result.value.toString();
