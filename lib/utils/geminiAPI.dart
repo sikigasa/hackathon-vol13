@@ -12,7 +12,8 @@ Future<DataPart> fileToPart(String mimeType, String path) async {
   return DataPart(mimeType, await File(path).readAsBytes());
 }
 
-final prompt = 'この写真は何ですか?';
+final prompt =
+    'この写真に移っている物がレシートだった場合、支払いをした合計金額をの数字のみを出力してください。2枚以上存在する場合、それぞれの合計金額を足した数字のみを出力して下さい。レシートでなく、金額が書かれていた場合金額の数値のみを出力して下さい。それ以外だった場合-1を出力してください。';
 itoTextWithGemini(CameraImage cameraImage) async {
   // Convert CameraImage to DataPart
   final rgbImage = ImageUtils.convertCameraImage(cameraImage);
