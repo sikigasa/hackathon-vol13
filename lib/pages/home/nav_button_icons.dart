@@ -99,11 +99,11 @@ class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
           padding: const EdgeInsets.all(12),
           margin: const EdgeInsets.symmetric(horizontal: 16), //横幅
           decoration: BoxDecoration(
-            color: buttonNavBgColor.withOpacity(0.8),
+            color: buttonNavBgColor.withAlpha((0.8 * 255).toInt()),
             borderRadius: const BorderRadius.all(Radius.circular(18)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withAlpha((0.3 * 255).toInt()),
                 spreadRadius: 1,
                 blurRadius: 20,
                 offset: const Offset(0, 20),
