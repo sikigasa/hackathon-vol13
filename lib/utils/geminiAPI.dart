@@ -2,11 +2,9 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:hackathon_vol13/utils/convertJpeg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-final model = GenerativeModel(
-  model: 'gemini-1.5-flash',
-  apiKey: Platform.environment['GEMINI_API_KEY'] ?? '',
-);
+SharedPreferences? prefs;
 
 Future<DataPart> fileToPart(String mimeType, String path) async {
   return DataPart(mimeType, await File(path).readAsBytes());
@@ -25,6 +23,11 @@ itoTextWithGemini(CameraImage cameraImage) async {
   // debug save jpeg
   // saveJpeg(jpegBytes);
 
+  prefs = await SharedPreferences.getInstance();
+  final model = GenerativeModel(
+    model: 'gemini-1.5-flash',
+    apiKey: prefs?.getString('GEMINI_API_KEY') ?? '',
+  );
   final response = await model.generateContent([
     Content.multi([TextPart(prompt), image])
   ]);
