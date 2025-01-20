@@ -45,11 +45,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 onChanged: (value) {
                   prefs?.setString('GEMINI_API_KEY', value);
-                  print('API Key: $value');
                 },
                 onSaved: (value) {
                   prefs?.setString('GEMINI_API_KEY', value!);
-                  print('API Key: $value');
                 },
               ),
             ),
