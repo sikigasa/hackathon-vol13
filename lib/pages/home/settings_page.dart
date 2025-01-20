@@ -37,6 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
+                obscureText: true,
                 controller: TextEditingController(
                     text: prefs?.getString('GEMINI_API_KEY') ?? ''),
                 decoration: const InputDecoration(
