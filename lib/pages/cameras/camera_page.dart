@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:hackathon_vol13/utils/geminiAPI.dart';
-import 'package:hackathon_vol13/utils/camera2.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -24,7 +23,7 @@ class _CameraState extends State<CameraPage> {
   bool isReady = false;
   bool skipScanning = false;
   bool isScanned = false;
-  RecognizedText? _recognizedText;
+  // RecognizedText? _recognizedText;
   String? _geminiResponse;
 
   @override

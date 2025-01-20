@@ -84,17 +84,16 @@ class _InputFormState extends State<InputForm> {
   int _amount = 0;
   @override
   Widget build(BuildContext context) {
-    Future<List<String>> getAmountTypes() async {
-      final items =
-          await widget.database.select(widget.database.amountTypes).get();
-      List<String> itemNames = items
-          .map((amount) => amount.title.toString()) // 文字列に変換
-          .toList();
-      print("priceType: $itemNames");
-      return itemNames;
-    }
+    // Future<List<String>> getAmountTypes() async {
+    //   final items =
+    //       await widget.database.select(widget.database.amountTypes).get();
+    //   List<String> itemNames = items
+    //       .map((amount) => amount.title.toString()) // 文字列に変換
+    //       .toList();
+    //   print("priceType: $itemNames");
+    //   return itemNames;
+    // }
 
-    var amountTypes = getAmountTypes();
     var dropDownText = "Enter wallet type";
     Map<String, int> amountTypesMap = {};
 
