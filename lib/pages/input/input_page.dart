@@ -99,98 +99,122 @@ class _InputFormState extends State<InputForm> {
 
     return Form(
       key: _formKey,
-      child: Column(
-        children: <Widget>[
-          // set DateTime
-          TextFormField(
-            controller: textEditingController,
-            decoration: const InputDecoration(
-              hintText: 'Enter date',
-            ),
-            onTap: () {
-              _getDate(context);
-            },
-            onChanged: (date) {
-              print(date);
-            },
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            keyboardType: TextInputType.number,
-            initialValue: widget.price,
-            decoration: const InputDecoration(
-              hintText: 'Enter price',
-            ),
-            validator: (String? value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some price';
-              }
-              return null;
-            },
-            onChanged: (price) {
-              _amount = int.parse(price);
-            },
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          FutureBuilder<List<String>>(
-            future: getAllAmountTypes(widget.database).then(
-              (amountTypes) =>
-                  amountTypes.map((amount) => amount.title.toString()).toList(),
-            ),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                return StatefulBuilder(
-                  builder: (context, setState) {
-                    return DropdownButtonFormField(
-                      decoration: const InputDecoration(
-                        hintText: 'Enter item',
-                      ),
-                      value: dropDownText = snapshot.data![0],
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropDownText = newValue!;
-                        });
-                      },
-                      items: snapshot.data!.map((String value) {
-                        return DropdownMenuItem(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    );
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: <Widget>[
+            // set DateTime
+            GestureDetector(
+              onTap: () {
+                _getDate(context);
+              },
+              child: AbsorbPointer(
+                child: TextFormField(
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a date';
+                    }
+                    final dateParts = value.split('/');
+                    if (dateParts.length != 3) {
+                      return 'Please enter a valid date in yyyy/mm/dd format';
+                    }
+                    final year = int.tryParse(dateParts[0]);
+                    final month = int.tryParse(dateParts[1]);
+                    final day = int.tryParse(dateParts[2]);
+                    if (year == null || month == null || day == null) {
+                      return 'Please enter a valid date in yyyy/mm/dd format';
+                    }
+                    if (month < 1 || month > 12 || day < 1 || day > 31) {
+                      return 'Please enter a valid date in yyyy/mm/dd format';
+                    }
+                    return null;
                   },
-                );
-              }
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                // Validate will return true if the form is valid, or false if
-                // the form is invalid.
-                if (_formKey.currentState!.validate()) {
-                  insertWallet(
-                    widget.database,
-                    _amount,
-                    0,
+                  controller: textEditingController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter date',
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextFormField(
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
+              initialValue: widget.price,
+              decoration: const InputDecoration(
+                hintText: 'Enter price',
+              ),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some price';
+                }
+                return null;
+              },
+              onChanged: (price) {
+                _amount = int.parse(price);
+              },
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            FutureBuilder<List<String>>(
+              future: getAllAmountTypes(widget.database).then(
+                (amountTypes) => amountTypes
+                    .map((amount) => amount.title.toString())
+                    .toList(),
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return StatefulBuilder(
+                    builder: (context, setState) {
+                      return DropdownButtonFormField(
+                        decoration: const InputDecoration(
+                          hintText: 'Enter item',
+                        ),
+                        value: dropDownText = snapshot.data![0],
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropDownText = newValue!;
+                          });
+                        },
+                        items: snapshot.data!.map((String value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      );
+                    },
                   );
-                  Navigator.pop(context);
                 }
               },
-              child: const Text('Submit'),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Validate will return true if the form is valid, or false if
+                  // the form is invalid.
+                  if (_formKey.currentState!.validate()) {
+                    insertWallet(
+                      widget.database,
+                      _amount,
+                      0,
+                    );
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text('Submit'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
