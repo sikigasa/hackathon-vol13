@@ -22,7 +22,7 @@ class ButtonNavWithIcons extends StatefulWidget {
 class _ButtonNavWithIconsState extends State<ButtonNavWithIcons> {
   List<SMIBool> riveIconInputs = [];
   List<StateMachineController?> controllers = [];
-  int selectedNavIndex = 0;
+  int selectedNavIndex = 2;
   List<String> pages = [
     // HomePage(),
     "Home",
