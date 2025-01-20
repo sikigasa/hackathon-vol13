@@ -76,7 +76,7 @@ InputImage? cameraImageToInputImage(
     return null;
   }
 
-  final sensorOrientation = camera.sensorOrientation;
+  final int sensorOrientation = camera.sensorOrientation;
 
   final InputImageRotation? rotation;
   if (Platform.isIOS) {
