@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hackathon_vol13/pages/home/nav_button_icons.dart';
 import 'database/wallet.dart';
 
@@ -13,6 +14,8 @@ Future<void> main() async {
   // Get a specific camera from the list of available cameras.
   // final firstCamera = cameras.first;
   final database = AppDatabase();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
   runApp(MyApp(
     database: database,
   ));

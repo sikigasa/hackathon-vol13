@@ -2,6 +2,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:hackathon_vol13/utils/geminiAPI.dart';
 import 'package:hackathon_vol13/utils/camera2.dart';
@@ -29,6 +30,8 @@ class _CameraState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     _setup();
   }
 
