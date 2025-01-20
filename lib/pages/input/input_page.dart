@@ -101,8 +101,8 @@ class _InputFormState extends State<InputForm> {
       key: _formKey,
       child: Column(
         children: <Widget>[
+          // set DateTime
           TextFormField(
-            // initialValue: DateTime.now().toString(),
             controller: textEditingController,
             decoration: const InputDecoration(
               hintText: 'Enter date',
