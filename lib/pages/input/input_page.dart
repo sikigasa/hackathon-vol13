@@ -96,6 +96,7 @@ class _InputFormState extends State<InputForm> {
 
     var amountTypes = getAmountTypes();
     var dropDownText = "Enter wallet type";
+    Map<String, int> amountTypesMap = {};
 
     return Form(
       key: _formKey,
@@ -160,11 +161,16 @@ class _InputFormState extends State<InputForm> {
               height: 20,
             ),
             FutureBuilder<List<String>>(
-              future: getAllAmountTypes(widget.database).then(
-                (amountTypes) => amountTypes
+              future: getAllAmountTypes(widget.database).then((amountTypes) {
+                amountTypesMap = {
+                  for (var amount in amountTypes)
+                    amount.title.toString(): amount.amountTypeId
+                };
+                print(amountTypesMap);
+                return amountTypes
                     .map((amount) => amount.title.toString())
-                    .toList(),
-              ),
+                    .toList();
+              }),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -202,11 +208,8 @@ class _InputFormState extends State<InputForm> {
                   // Validate will return true if the form is valid, or false if
                   // the form is invalid.
                   if (_formKey.currentState!.validate()) {
-                    insertWallet(
-                      widget.database,
-                      _amount,
-                      0,
-                    );
+                    insertWallet(widget.database, _amount,
+                        amountTypesMap[dropDownText] ?? 0);
                     Navigator.pop(context);
                   }
                 },
