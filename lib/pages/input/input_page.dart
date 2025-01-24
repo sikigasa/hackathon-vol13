@@ -50,6 +50,7 @@ class _InputFormState extends State<InputForm> {
   final dateEditingController = TextEditingController(
       text:
           '${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}');
+  final amountEditingController = TextEditingController(text: '0');
   Future _getDate(BuildContext context) async {
     final initialDate = DateTime.now();
 
@@ -212,7 +213,7 @@ class _InputFormState extends State<InputForm> {
             TextFormField(
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               keyboardType: TextInputType.number,
-              initialValue: widget.price,
+              controller: amountEditingController,
               decoration: const InputDecoration(
                 hintText: 'Enter price',
               ),
@@ -227,7 +228,10 @@ class _InputFormState extends State<InputForm> {
                 return null;
               },
               onChanged: (price) {
-                _amount = int.parse(price);
+                if (int.tryParse(price) != null) {
+                  _amount = int.parse(price);
+                  amountEditingController.text = _amount.toString();
+                }
               },
             ),
             const SizedBox(height: 20),
@@ -238,7 +242,7 @@ class _InputFormState extends State<InputForm> {
                   onPressed: () {
                     setState(() {
                       _amount += 100;
-                      dateEditingController.text = _amount.toString();
+                      amountEditingController.text = _amount.toString();
                     });
                   },
                   child: const Text('+100'),
