@@ -94,7 +94,7 @@ class _InputFormState extends State<InputForm> {
     //   return itemNames;
     // }
 
-    var dropDownText = "wallet";
+    var dropDownText = "EnterWallet";
     Map<String, int> amountTypesMap = {};
 
     return Form(
@@ -169,7 +169,6 @@ class _InputFormState extends State<InputForm> {
                   for (var amount in amountTypes)
                     amount.title.toString(): amount.amountTypeId
                 };
-                print(amountTypesMap);
                 return amountTypes
                     .map((amount) => amount.title.toString())
                     .toList();
@@ -186,7 +185,7 @@ class _InputFormState extends State<InputForm> {
                         decoration: const InputDecoration(
                           hintText: 'Enter item',
                         ),
-                        value: dropDownText,
+                        value: snapshot.data!.first,
                         onChanged: (String? newValue) {
                           setState(() {
                             dropDownText = newValue!;
@@ -213,11 +212,6 @@ class _InputFormState extends State<InputForm> {
                   if (_formKey.currentState!.validate()) {
                     insertWallet(widget.database, _amount,
                         amountTypesMap[dropDownText] ?? 0);
-                    print('Database: ${widget.database}');
-                    print('Amount: $_amount');
-                    print('Amount Type: $dropDownText');
-                    print(amountTypesMap);
-                    print('Amount Type: ${amountTypesMap[dropDownText] ?? 0}');
                     Navigator.pop(context);
                   }
                 },
