@@ -94,7 +94,7 @@ class _InputFormState extends State<InputForm> {
     //   return itemNames;
     // }
 
-    var dropDownText = "Enter wallet type";
+    var dropDownText = "wallet";
     Map<String, int> amountTypesMap = {};
 
     return Form(
@@ -149,6 +149,10 @@ class _InputFormState extends State<InputForm> {
               validator: (String? value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter some price';
+                } else if (int.tryParse(value) == null) {
+                  return 'Please enter a valid number';
+                } else if (int.parse(value) <= 0) {
+                  return 'Please enter a number greater than 0';
                 }
                 return null;
               },
@@ -182,7 +186,7 @@ class _InputFormState extends State<InputForm> {
                         decoration: const InputDecoration(
                           hintText: 'Enter item',
                         ),
-                        value: dropDownText = snapshot.data![0],
+                        value: dropDownText,
                         onChanged: (String? newValue) {
                           setState(() {
                             dropDownText = newValue!;
@@ -209,6 +213,11 @@ class _InputFormState extends State<InputForm> {
                   if (_formKey.currentState!.validate()) {
                     insertWallet(widget.database, _amount,
                         amountTypesMap[dropDownText] ?? 0);
+                    print('Database: ${widget.database}');
+                    print('Amount: $_amount');
+                    print('Amount Type: $dropDownText');
+                    print(amountTypesMap);
+                    print('Amount Type: ${amountTypesMap[dropDownText] ?? 0}');
                     Navigator.pop(context);
                   }
                 },
