@@ -47,7 +47,7 @@ class InputForm extends StatefulWidget {
 
 class _InputFormState extends State<InputForm> {
   final _formKey = GlobalKey<FormState>();
-  final textEditingController = TextEditingController(
+  final dateEditingController = TextEditingController(
       text:
           '${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}');
   Future _getDate(BuildContext context) async {
@@ -62,7 +62,7 @@ class _InputFormState extends State<InputForm> {
 
     if (newDate != null) {
       //選択した日付をTextFormFieldに設定
-      textEditingController.text =
+      dateEditingController.text =
           '${newDate.year}/${newDate.month}/${newDate.day}';
     } else {
       return;
@@ -77,7 +77,7 @@ class _InputFormState extends State<InputForm> {
 
   @override
   void dispose() {
-    textEditingController.dispose();
+    dateEditingController.dispose();
     super.dispose();
   }
 
@@ -130,7 +130,7 @@ class _InputFormState extends State<InputForm> {
                     }
                     return null;
                   },
-                  controller: textEditingController,
+                  controller: dateEditingController,
                   decoration: const InputDecoration(
                     hintText: 'Enter date',
                   ),
@@ -164,28 +164,7 @@ class _InputFormState extends State<InputForm> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              keyboardType: TextInputType.number,
-              initialValue: widget.price,
-              decoration: const InputDecoration(
-                hintText: 'Enter price',
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter some price';
-                } else if (int.tryParse(value) == null) {
-                  return 'Please enter a valid number';
-                } else if (int.parse(value) <= 0) {
-                  return 'Please enter a number greater than 0';
-                }
-                return null;
-              },
-              onChanged: (price) {
-                _amount = int.parse(price);
-              },
-            ),
+
             const SizedBox(
               height: 20,
             ),
@@ -228,6 +207,48 @@ class _InputFormState extends State<InputForm> {
                   );
                 }
               },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: TextInputType.number,
+              initialValue: widget.price,
+              decoration: const InputDecoration(
+                hintText: 'Enter price',
+              ),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter some price';
+                } else if (int.tryParse(value) == null) {
+                  return 'Please enter a valid number';
+                } else if (int.parse(value) <= 0) {
+                  return 'Please enter a number greater than 0';
+                }
+                return null;
+              },
+              onChanged: (price) {
+                _amount = int.parse(price);
+              },
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _amount += 100;
+                      dateEditingController.text = _amount.toString();
+                    });
+                  },
+                  child: const Text('+100'),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('+500'),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
