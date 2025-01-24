@@ -82,6 +82,7 @@ class _InputFormState extends State<InputForm> {
   }
 
   int _amount = 0;
+  List<bool> isSelected = [true, false];
   @override
   Widget build(BuildContext context) {
     // Future<List<String>> getAmountTypes() async {
@@ -139,6 +140,31 @@ class _InputFormState extends State<InputForm> {
             const SizedBox(
               height: 20,
             ),
+            ToggleButtons(
+              isSelected: isSelected,
+              onPressed: (int index) {
+                setState(() {
+                  // 押されたボタンだけがtrueになるように設定
+                  for (int i = 0; i < isSelected.length; i++) {
+                    isSelected[i] = i == index;
+                  }
+                });
+              },
+              borderRadius: BorderRadius.circular(10),
+              selectedColor: Colors.white,
+              fillColor: Colors.blue,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Text('支出'),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Text('収入'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
             TextFormField(
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               keyboardType: TextInputType.number,
