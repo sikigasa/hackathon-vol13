@@ -51,6 +51,12 @@ class _InputFormState extends State<InputForm> {
       text:
           '${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}');
   final amountEditingController = TextEditingController(text: '0');
+
+  int _amount = 0;
+  List<bool> isSelected = [true, false];
+  String? selectedDropdownValue; // 選択された値を保持
+  Map<String, int> amountTypesMap = {};
+
   Future _getDate(BuildContext context) async {
     final initialDate = DateTime.now();
 
@@ -62,18 +68,9 @@ class _InputFormState extends State<InputForm> {
     );
 
     if (newDate != null) {
-      //選択した日付をTextFormFieldに設定
       dateEditingController.text =
           '${newDate.year}/${newDate.month}/${newDate.day}';
-    } else {
-      return;
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // _setup();
   }
 
   @override
@@ -82,8 +79,6 @@ class _InputFormState extends State<InputForm> {
     super.dispose();
   }
 
-  int _amount = 0;
-  List<bool> isSelected = [true, false];
   @override
   Widget build(BuildContext context) {
     // Future<List<String>> getAmountTypes() async {
@@ -95,17 +90,12 @@ class _InputFormState extends State<InputForm> {
     //   print("priceType: $itemNames");
     //   return itemNames;
     // }
-
-    var dropDownText = "EnterWallet";
-    Map<String, int> amountTypesMap = {};
-
     return Form(
       key: _formKey,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: <Widget>[
-            // set DateTime
             GestureDetector(
               onTap: () {
                 _getDate(context);
@@ -116,19 +106,6 @@ class _InputFormState extends State<InputForm> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a date';
                     }
-                    final dateParts = value.split('/');
-                    if (dateParts.length != 3) {
-                      return 'Please enter a valid date in yyyy/mm/dd format';
-                    }
-                    final year = int.tryParse(dateParts[0]);
-                    final month = int.tryParse(dateParts[1]);
-                    final day = int.tryParse(dateParts[2]);
-                    if (year == null || month == null || day == null) {
-                      return 'Please enter a valid date in yyyy/mm/dd format';
-                    }
-                    if (month < 1 || month > 12 || day < 1 || day > 31) {
-                      return 'Please enter a valid date in yyyy/mm/dd format';
-                    }
                     return null;
                   },
                   controller: dateEditingController,
@@ -138,14 +115,13 @@ class _InputFormState extends State<InputForm> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
+
+            // Toggleボタン
             ToggleButtons(
               isSelected: isSelected,
               onPressed: (int index) {
                 setState(() {
-                  // 押されたボタンだけがtrueになるように設定
                   for (int i = 0; i < isSelected.length; i++) {
                     isSelected[i] = i == index;
                   }
@@ -154,21 +130,20 @@ class _InputFormState extends State<InputForm> {
               borderRadius: BorderRadius.circular(10),
               selectedColor: Colors.white,
               fillColor: Colors.blue,
-              children: [
-                const Padding(
+              children: const [
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.0),
                   child: Text('支出'),
                 ),
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.0),
                   child: Text('収入'),
                 ),
               ],
             ),
+            const SizedBox(height: 20),
 
-            const SizedBox(
-              height: 20,
-            ),
+            // ドロップダウン
             FutureBuilder<List<String>>(
               future: getAllAmountTypes(widget.database).then((amountTypes) {
                 amountTypesMap = {
@@ -185,31 +160,34 @@ class _InputFormState extends State<InputForm> {
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
-                  return StatefulBuilder(
-                    builder: (context, setState) {
-                      return DropdownButtonFormField(
-                        decoration: const InputDecoration(
-                          hintText: 'Enter item',
-                        ),
-                        value: snapshot.data!.first,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            dropDownText = newValue!;
-                          });
-                        },
-                        items: snapshot.data!.map((String value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      );
+                  // 初回の初期化処理
+                  if (selectedDropdownValue == null &&
+                      snapshot.data!.isNotEmpty) {
+                    selectedDropdownValue = snapshot.data!.first;
+                  }
+                  return DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Enter item',
+                    ),
+                    value: selectedDropdownValue, // 状態を反映
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedDropdownValue = newValue;
+                      });
                     },
+                    items: snapshot.data!.map((String value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   );
                 }
               },
             ),
             const SizedBox(height: 20),
+
+            // 金額入力
             TextFormField(
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               keyboardType: TextInputType.number,
@@ -230,11 +208,12 @@ class _InputFormState extends State<InputForm> {
               onChanged: (price) {
                 if (int.tryParse(price) != null) {
                   _amount = int.parse(price);
-                  amountEditingController.text = _amount.toString();
                 }
               },
             ),
             const SizedBox(height: 20),
+
+            // ボタンによる金額の変更
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -249,25 +228,31 @@ class _InputFormState extends State<InputForm> {
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    setState(() {
+                      _amount += 500;
+                      amountEditingController.text = _amount.toString();
+                    });
+                  },
                   child: const Text('+500'),
                 ),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Validate will return true if the form is valid, or false if
-                  // the form is invalid.
-                  if (_formKey.currentState!.validate()) {
-                    insertWallet(widget.database, _amount,
-                        amountTypesMap[dropDownText] ?? 0);
-                    Navigator.pop(context);
-                  }
-                },
-                child: const Text('Submit'),
-              ),
+            const SizedBox(height: 20),
+
+            // 送信ボタン
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  insertWallet(
+                    widget.database,
+                    _amount,
+                    amountTypesMap[selectedDropdownValue ?? ''] ?? 0,
+                  );
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text('Submit'),
             ),
           ],
         ),
