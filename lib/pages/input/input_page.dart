@@ -162,7 +162,7 @@ class _InputFormState extends State<InputForm> {
                         DropdownMenuItem(child: Text(selectedDropdownValue!))
                     ],
                     onChanged: (value) {},
-                  ); //const CircularProgressIndicator();
+                  );
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
@@ -175,7 +175,7 @@ class _InputFormState extends State<InputForm> {
                     decoration: const InputDecoration(
                       hintText: 'Enter item',
                     ),
-                    value: selectedDropdownValue, // 状態を反映
+                    value: selectedDropdownValue,
                     onChanged: (String? newValue) {
                       setState(() {
                         selectedDropdownValue = newValue;
@@ -244,12 +244,25 @@ class _InputFormState extends State<InputForm> {
                   },
                   child: const Text('+500'),
                 ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _amount = 0;
+                      amountEditingController.text = "";
+                    });
+                  },
+                  child: const Text('Clear'),
+                ),
               ],
             ),
             const SizedBox(height: 20),
 
             // 送信ボタン
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   insertWallet(
@@ -260,7 +273,7 @@ class _InputFormState extends State<InputForm> {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Submit'),
+              child: const Text('登録'),
             ),
           ],
         ),
