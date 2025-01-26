@@ -175,7 +175,14 @@ class _InputFormState extends State<InputForm> {
                   return DropdownButtonFormField(
                     items: [
                       if (selectedDropdownValue != null)
-                        DropdownMenuItem(child: Text(selectedDropdownValue!))
+                        DropdownMenuItem(
+                          value: selectedDropdownValue!,
+                          child: Text(selectedDropdownValue!),
+                        ),
+                      const DropdownMenuItem(
+                        value: 'dummy',
+                        child: Text('dummy'),
+                      ),
                     ],
                     onChanged: (value) {},
                   );
