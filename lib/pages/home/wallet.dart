@@ -73,8 +73,10 @@ class WalletCard extends StatelessWidget {
                             style: const TextStyle(fontSize: 30));
                       } else {
                         // データが取得できた場合の表示
-                        return Text('${snapshot.data}円',
-                            style: const TextStyle(fontSize: 30));
+                        return Text(
+                          '${snapshot.data}円',
+                          style: const TextStyle(fontSize: 30),
+                        );
                       }
                     },
                   ), //Text('$balance円', style: TextStyle(fontSize: 30)),
