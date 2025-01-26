@@ -69,7 +69,7 @@ class _InputFormState extends State<InputForm> {
   final amountEditingController = TextEditingController(text: '');
 
   int _amount = 0;
-  List<bool> isSelected = [true, false];
+  List<bool> isPayment = [true, false];
   String? selectedDropdownValue; // 選択された値を保持
   Map<String, int> amountTypesMap = {};
 
@@ -135,11 +135,11 @@ class _InputFormState extends State<InputForm> {
 
             // Toggleボタン
             ToggleButtons(
-              isSelected: isSelected,
+              isSelected: isPayment,
               onPressed: (int index) {
                 setState(() {
-                  for (int i = 0; i < isSelected.length; i++) {
-                    isSelected[i] = i == index;
+                  for (int i = 0; i < isPayment.length; i++) {
+                    isPayment[i] = i == index;
                   }
                 });
               },
@@ -290,7 +290,7 @@ class _InputFormState extends State<InputForm> {
                 if (_formKey.currentState!.validate()) {
                   insertWallet(
                     widget.database,
-                    _amount,
+                    isPayment[0] ? -_amount : _amount,
                     amountTypesMap[selectedDropdownValue ?? ''] ?? 0,
                   );
                   Navigator.pop(context);
