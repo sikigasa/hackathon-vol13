@@ -50,7 +50,7 @@ class _InputFormState extends State<InputForm> {
   final dateEditingController = TextEditingController(
       text:
           '${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}');
-  final amountEditingController = TextEditingController(text: '0');
+  final amountEditingController = TextEditingController(text: '');
 
   int _amount = 0;
   List<bool> isSelected = [true, false];
@@ -214,6 +214,8 @@ class _InputFormState extends State<InputForm> {
               onChanged: (price) {
                 if (int.tryParse(price) != null) {
                   _amount = int.parse(price);
+                } else {
+                  _amount = 0;
                 }
               },
             ),
