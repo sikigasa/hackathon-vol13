@@ -156,7 +156,13 @@ class _InputFormState extends State<InputForm> {
               }),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
+                  return DropdownButtonFormField(
+                    items: [
+                      if (selectedDropdownValue != null)
+                        DropdownMenuItem(child: Text(selectedDropdownValue!))
+                    ],
+                    onChanged: (value) {},
+                  ); //const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 } else {
