@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/pages/cameras/camera_page.dart';
 import 'package:hackathon_vol13/database/wallet.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TakePictureScreen extends StatefulWidget {
   final AppDatabase database;
@@ -16,21 +17,36 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('input')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          price = await Navigator.push(
-            context,
-            MaterialPageRoute<String>(
-              builder: (context) => const CameraPage(),
-            ),
-          );
-          if (price != null) {
-            print('Received Price: $price');
+      appBar: AppBar(title: const Text('金額入力')),
+      floatingActionButton: FutureBuilder<String?>(
+        future: SharedPreferences.getInstance().then((prefs) {
+          return prefs.getString('GEMINI_API_KEY');
+        }),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox.shrink();
+          } else if (snapshot.hasError ||
+              snapshot.data == null ||
+              snapshot.data!.isEmpty) {
+            return const SizedBox.shrink();
+          } else {
+            return FloatingActionButton(
+              onPressed: () async {
+                price = await Navigator.push(
+                  context,
+                  MaterialPageRoute<String>(
+                    builder: (context) => const CameraPage(),
+                  ),
+                );
+                if (price != null) {
+                  print('Received Price: $price');
+                }
+              },
+              backgroundColor: Colors.blue,
+              child: const Icon(Icons.camera_alt_outlined),
+            );
           }
         },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.camera_alt_outlined),
       ),
       body: InputForm(price: price, database: widget.database),
     );
