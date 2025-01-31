@@ -66,23 +66,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       drawerScrimColor: const Color.fromARGB(219, 89, 0, 255),
       body: TabBarView(
         controller: _tabController,
-        children: <Widget>[
-          ...List.generate(
-              _tabLength,
-              (index) => WalletPage(
-                    database: widget.database,
-                  )),
-          WalletPage(
+        children: List.generate(
+          _tabLength,
+          (index) => WalletPage(
             database: widget.database,
+            tabIndex: index,
           ),
-          Center(
-            child: Text(simpleParser("1, 000円 \n 500円 \n 100円")),
-          ),
-          WalletPage(
-            database: widget.database,
-          ),
-          const Text("data"),
-        ],
+        )..addAll([
+            WalletPage(
+              database: widget.database,
+              tabIndex: _tabLength,
+            ),
+            // Center(
+            //   child: Text(simpleParser("1, 000円 \n 500円 \n 100円")),
+            // ),
+            WalletPage(
+              database: widget.database,
+              tabIndex: _tabLength + 1,
+            ),
+            WalletPage(
+              database: widget.database,
+              tabIndex: _tabLength + 2,
+            ),
+            const Text("data"),
+          ]),
       ),
     );
   }

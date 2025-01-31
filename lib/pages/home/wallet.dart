@@ -3,7 +3,8 @@ import 'package:hackathon_vol13/database/wallet.dart';
 
 class WalletPage extends StatefulWidget {
   final AppDatabase database;
-  const WalletPage({super.key, required this.database});
+  final int tabIndex;
+  const WalletPage({super.key, required this.database, required this.tabIndex});
 
   @override
   State<WalletPage> createState() => _WalletPageState();
@@ -21,6 +22,7 @@ class _WalletPageState extends State<WalletPage> {
           const Text('残高', style: TextStyle(fontSize: 15)),
           WalletCard(
             database: widget.database,
+            tabIndex: widget.tabIndex,
           ),
         ],
       ),
@@ -30,7 +32,8 @@ class _WalletPageState extends State<WalletPage> {
 
 class WalletCard extends StatelessWidget {
   final AppDatabase database;
-  const WalletCard({super.key, required this.database});
+  final int tabIndex;
+  const WalletCard({super.key, required this.database, required this.tabIndex});
   @override
   Widget build(BuildContext context) {
     // database
@@ -38,7 +41,7 @@ class WalletCard extends StatelessWidget {
     // .insert(AmountType(amountTypeId: 0, title: "wallet"));
     // insertWallet(database, Wallet(walletId: 0, amount: 1000, amountTypeId: 0));
     Future<int> getBalance() async {
-      var balances = await getAllWallets(database);
+      var balances = await getAllWalletsByAmountTypeId(database, tabIndex);
       int totalAmount = balances.fold(0, (acc, wallet) => acc + wallet.amount);
       return totalAmount;
     }
