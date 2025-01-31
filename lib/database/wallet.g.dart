@@ -503,8 +503,9 @@ final class $$AmountTypesTableReferences
               db.amountTypes.amountTypeId, db.wallets.amountTypeId));
 
   $$WalletsTableProcessedTableManager get walletsRefs {
-    final manager = $$WalletsTableTableManager($_db, $_db.wallets)
-        .filter((f) => f.amountTypeId.amountTypeId($_item.amountTypeId));
+    final manager = $$WalletsTableTableManager($_db, $_db.wallets).filter((f) =>
+        f.amountTypeId.amountTypeId
+            .sqlEquals($_itemColumn<int>('amount_type_id')!));
 
     final cache = $_typedResult.readTableOrNull(_walletsRefsTable($_db));
     return ProcessedTableManager(
@@ -709,8 +710,10 @@ final class $$WalletsTableReferences
           db.wallets.amountTypeId, db.amountTypes.amountTypeId));
 
   $$AmountTypesTableProcessedTableManager get amountTypeId {
+    final $_column = $_itemColumn<int>('amount_type_id')!;
+
     final manager = $$AmountTypesTableTableManager($_db, $_db.amountTypes)
-        .filter((f) => f.amountTypeId($_item.amountTypeId!));
+        .filter((f) => f.amountTypeId.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_amountTypeIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(

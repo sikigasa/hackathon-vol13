@@ -92,6 +92,12 @@ Stream<List<Wallet>> watchAllWallets(AppDatabase db) {
   return db.select(db.wallets).watch();
 }
 
+Stream<List<Wallet>> watchAllWalletsByAmountTypeId(
+    AppDatabase db, int amountTypeId) {
+  return db.select(db.wallets).watch().map((wallets) =>
+      wallets.where((wallet) => wallet.amountTypeId == amountTypeId).toList());
+}
+
 // データベースから全ての金額を一度だけ取得する。
 Future<List<Wallet>> getAllWallets(AppDatabase db) {
   return db.select(db.wallets).get();
