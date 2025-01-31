@@ -103,6 +103,12 @@ Future<List<Wallet>> getAllWallets(AppDatabase db) {
   return db.select(db.wallets).get();
 }
 
+Future<List<Wallet>> getAllWalletsByAmountTypeId(
+    AppDatabase db, int amountTypeId) {
+  return db.select(db.wallets).get().then((wallets) =>
+      wallets.where((wallet) => wallet.amountTypeId == amountTypeId).toList());
+}
+
 // 新しい購入履歴をデータベースに挿入する。
 // Future insertWallet(AppDatabase db, Wallet wallet) {
 //   return db.into(db.wallets).insert(wallet);
