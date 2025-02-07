@@ -126,6 +126,7 @@ class _InputFormState extends State<InputForm> {
                   },
                   controller: dateEditingController,
                   decoration: const InputDecoration(
+                    labelText: '日付',
                     hintText: 'Enter date',
                   ),
                 ),
@@ -196,6 +197,7 @@ class _InputFormState extends State<InputForm> {
                   }
                   return DropdownButtonFormField(
                     decoration: const InputDecoration(
+                      labelText: '項目',
                       hintText: 'Enter item',
                     ),
                     value: selectedDropdownValue,
@@ -222,6 +224,7 @@ class _InputFormState extends State<InputForm> {
               keyboardType: TextInputType.number,
               controller: amountEditingController,
               decoration: const InputDecoration(
+                labelText: '金額',
                 hintText: 'Enter price',
               ),
               validator: (String? value) {
