@@ -13,29 +13,29 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _tabController;
-  late int _tabLength = 0;
+  int _tabLength = 4;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(
-      length: 4, // タブの数
-      vsync: this, // 動作させるアニメーションの種類
-    );
-    watchAllAmountTypes(widget.database).length.then((length) {
-      setState(() {
-        _tabLength = length;
-        _tabController = TabController(
-          length: _tabLength, // タブの数
-          vsync: this, // 動作させるアニメーションの種類
-        );
-      });
+    _tabController = TabController(length: _tabLength, vsync: this);
+    _loadAmountTypes();
+  }
+
+  Future<void> _loadAmountTypes() async {
+    final amountTypes = await getAllAmountTypes(widget.database);
+    if (!mounted) return;
+
+    setState(() {
+      _tabLength = amountTypes.length + 1; // デフォルトの1つのタブを追加
+      _tabController.dispose(); // 古いコントローラを破棄
+      _tabController = TabController(length: _tabLength, vsync: this);
     });
   }
 
   @override
   void dispose() {
-    _tabController.dispose(); // 使い終わったら破棄する
+    _tabController.dispose();
     super.dispose();
   }
 
@@ -47,49 +47,43 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         bottom: TabBar(
           isScrollable: true,
           controller: _tabController,
-          tabs: const <Widget>[
-            Tab(
-              icon: Icon(Icons.wallet),
+          tabs: [
+            // const Tab(icon: Icon(Icons.wallet)),
+            // const Tab(icon: Icon(Icons.savings_outlined)),
+            // const Tab(icon: Icon(Icons.credit_card)),
+            ...List.generate(
+              _tabLength - 1,
+              (index) => const Tab(icon: Icon(Icons.wallet)),
             ),
-            Tab(
-              icon: Icon(Icons.savings_outlined),
-            ),
-            Tab(
-              icon: Icon(Icons.credit_card),
-            ),
-            Tab(
-              icon: Icon(Icons.add_rounded),
-            ),
+            const Tab(icon: Icon(Icons.add_rounded)),
           ],
         ),
       ),
       drawerScrimColor: const Color.fromARGB(219, 89, 0, 255),
       body: TabBarView(
         controller: _tabController,
-        children: List.generate(
-          _tabLength,
-          (index) => WalletPage(
-            database: widget.database,
-            tabIndex: index,
+        children: [
+          ...List.generate(
+            _tabLength - 1,
+            (index) => WalletPage(
+              database: widget.database,
+              tabIndex: index,
+            ),
           ),
-        )..addAll([
-            WalletPage(
-              database: widget.database,
-              tabIndex: _tabLength,
-            ),
-            // Center(
-            //   child: Text(simpleParser("1, 000円 \n 500円 \n 100円")),
-            // ),
-            WalletPage(
-              database: widget.database,
-              tabIndex: _tabLength + 1,
-            ),
-            WalletPage(
-              database: widget.database,
-              tabIndex: _tabLength + 2,
-            ),
-            const Text("data"),
-          ]),
+          // WalletPage(
+          //   database: widget.database,
+          //   tabIndex: _tabLength - 4,
+          // ),
+          // WalletPage(
+          //   database: widget.database,
+          //   tabIndex: _tabLength - 3,
+          // ),
+          // WalletPage(
+          //   database: widget.database,
+          //   tabIndex: _tabLength - 2,
+          // ),
+          const Text("data"),
+        ],
       ),
     );
   }
