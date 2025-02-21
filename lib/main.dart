@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       home: ButtonNavWithIcons(database: database),
     );
   }
