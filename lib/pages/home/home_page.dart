@@ -62,9 +62,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           isScrollable: true,
           controller: _tabController,
           tabs: [
-            // const Tab(icon: Icon(Icons.wallet)),
-            // const Tab(icon: Icon(Icons.savings_outlined)),
-            // const Tab(icon: Icon(Icons.credit_card)),
             ...List.generate(
               _tabLength - 1,
               (index) => Tab(icon: Icon(amountIcons[index].amountTypeIconName)),
@@ -84,18 +81,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               tabIndex: index,
             ),
           ),
-          // WalletPage(
-          //   database: widget.database,
-          //   tabIndex: _tabLength - 4,
-          // ),
-          // WalletPage(
-          //   database: widget.database,
-          //   tabIndex: _tabLength - 3,
-          // ),
-          // WalletPage(
-          //   database: widget.database,
-          //   tabIndex: _tabLength - 2,
-          // ),
           const Text("data"),
         ],
       ),
