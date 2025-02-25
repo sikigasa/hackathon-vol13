@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_vol13/pages/home/add_tab_page.dart';
 import 'package:hackathon_vol13/pages/home/wallet.dart';
 import 'package:hackathon_vol13/database/wallet.dart';
 import 'package:hackathon_vol13/utils/parser.dart';
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     setState(() {
       _tabLength = amountTypes.length + 1; // デフォルトの1つのタブを追加
-      _tabController.dispose(); // 古いコントローラを破棄
+      _tabController.dispose();
       _tabController = TabController(length: _tabLength, vsync: this);
     });
   }
@@ -81,7 +82,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               tabIndex: index,
             ),
           ),
-          const Text("data"),
+          AddTabPage(),
         ],
       ),
     );
