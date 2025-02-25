@@ -27,8 +27,16 @@ class $AmountTypesTable extends AmountTypes
           GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 50),
       type: DriftSqlType.string,
       requiredDuringInsert: true);
+  static const VerificationMeta _amountTypeIconIdMeta =
+      const VerificationMeta('amountTypeIconId');
   @override
-  List<GeneratedColumn> get $columns => [amountTypeId, title];
+  late final GeneratedColumn<int> amountTypeIconId = GeneratedColumn<int>(
+      'amount_type_icon_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(1));
+  @override
+  List<GeneratedColumn> get $columns => [amountTypeId, title, amountTypeIconId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -51,6 +59,12 @@ class $AmountTypesTable extends AmountTypes
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
+    if (data.containsKey('amount_type_icon_id')) {
+      context.handle(
+          _amountTypeIconIdMeta,
+          amountTypeIconId.isAcceptableOrUnknown(
+              data['amount_type_icon_id']!, _amountTypeIconIdMeta));
+    }
     return context;
   }
 
@@ -64,6 +78,8 @@ class $AmountTypesTable extends AmountTypes
           .read(DriftSqlType.int, data['${effectivePrefix}amount_type_id'])!,
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      amountTypeIconId: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}amount_type_icon_id'])!,
     );
   }
 
@@ -76,12 +92,17 @@ class $AmountTypesTable extends AmountTypes
 class AmountType extends DataClass implements Insertable<AmountType> {
   final int amountTypeId;
   final String title;
-  const AmountType({required this.amountTypeId, required this.title});
+  final int amountTypeIconId;
+  const AmountType(
+      {required this.amountTypeId,
+      required this.title,
+      required this.amountTypeIconId});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['amount_type_id'] = Variable<int>(amountTypeId);
     map['title'] = Variable<String>(title);
+    map['amount_type_icon_id'] = Variable<int>(amountTypeIconId);
     return map;
   }
 
@@ -89,6 +110,7 @@ class AmountType extends DataClass implements Insertable<AmountType> {
     return AmountTypesCompanion(
       amountTypeId: Value(amountTypeId),
       title: Value(title),
+      amountTypeIconId: Value(amountTypeIconId),
     );
   }
 
@@ -98,6 +120,7 @@ class AmountType extends DataClass implements Insertable<AmountType> {
     return AmountType(
       amountTypeId: serializer.fromJson<int>(json['amountTypeId']),
       title: serializer.fromJson<String>(json['title']),
+      amountTypeIconId: serializer.fromJson<int>(json['amountTypeIconId']),
     );
   }
   @override
@@ -106,12 +129,16 @@ class AmountType extends DataClass implements Insertable<AmountType> {
     return <String, dynamic>{
       'amountTypeId': serializer.toJson<int>(amountTypeId),
       'title': serializer.toJson<String>(title),
+      'amountTypeIconId': serializer.toJson<int>(amountTypeIconId),
     };
   }
 
-  AmountType copyWith({int? amountTypeId, String? title}) => AmountType(
+  AmountType copyWith(
+          {int? amountTypeId, String? title, int? amountTypeIconId}) =>
+      AmountType(
         amountTypeId: amountTypeId ?? this.amountTypeId,
         title: title ?? this.title,
+        amountTypeIconId: amountTypeIconId ?? this.amountTypeIconId,
       );
   AmountType copyWithCompanion(AmountTypesCompanion data) {
     return AmountType(
@@ -119,6 +146,9 @@ class AmountType extends DataClass implements Insertable<AmountType> {
           ? data.amountTypeId.value
           : this.amountTypeId,
       title: data.title.present ? data.title.value : this.title,
+      amountTypeIconId: data.amountTypeIconId.present
+          ? data.amountTypeIconId.value
+          : this.amountTypeIconId,
     );
   }
 
@@ -126,47 +156,57 @@ class AmountType extends DataClass implements Insertable<AmountType> {
   String toString() {
     return (StringBuffer('AmountType(')
           ..write('amountTypeId: $amountTypeId, ')
-          ..write('title: $title')
+          ..write('title: $title, ')
+          ..write('amountTypeIconId: $amountTypeIconId')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(amountTypeId, title);
+  int get hashCode => Object.hash(amountTypeId, title, amountTypeIconId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is AmountType &&
           other.amountTypeId == this.amountTypeId &&
-          other.title == this.title);
+          other.title == this.title &&
+          other.amountTypeIconId == this.amountTypeIconId);
 }
 
 class AmountTypesCompanion extends UpdateCompanion<AmountType> {
   final Value<int> amountTypeId;
   final Value<String> title;
+  final Value<int> amountTypeIconId;
   const AmountTypesCompanion({
     this.amountTypeId = const Value.absent(),
     this.title = const Value.absent(),
+    this.amountTypeIconId = const Value.absent(),
   });
   AmountTypesCompanion.insert({
     this.amountTypeId = const Value.absent(),
     required String title,
+    this.amountTypeIconId = const Value.absent(),
   }) : title = Value(title);
   static Insertable<AmountType> custom({
     Expression<int>? amountTypeId,
     Expression<String>? title,
+    Expression<int>? amountTypeIconId,
   }) {
     return RawValuesInsertable({
       if (amountTypeId != null) 'amount_type_id': amountTypeId,
       if (title != null) 'title': title,
+      if (amountTypeIconId != null) 'amount_type_icon_id': amountTypeIconId,
     });
   }
 
   AmountTypesCompanion copyWith(
-      {Value<int>? amountTypeId, Value<String>? title}) {
+      {Value<int>? amountTypeId,
+      Value<String>? title,
+      Value<int>? amountTypeIconId}) {
     return AmountTypesCompanion(
       amountTypeId: amountTypeId ?? this.amountTypeId,
       title: title ?? this.title,
+      amountTypeIconId: amountTypeIconId ?? this.amountTypeIconId,
     );
   }
 
@@ -179,6 +219,9 @@ class AmountTypesCompanion extends UpdateCompanion<AmountType> {
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
+    if (amountTypeIconId.present) {
+      map['amount_type_icon_id'] = Variable<int>(amountTypeIconId.value);
+    }
     return map;
   }
 
@@ -186,7 +229,8 @@ class AmountTypesCompanion extends UpdateCompanion<AmountType> {
   String toString() {
     return (StringBuffer('AmountTypesCompanion(')
           ..write('amountTypeId: $amountTypeId, ')
-          ..write('title: $title')
+          ..write('title: $title, ')
+          ..write('amountTypeIconId: $amountTypeIconId')
           ..write(')'))
         .toString();
   }
@@ -485,11 +529,13 @@ typedef $$AmountTypesTableCreateCompanionBuilder = AmountTypesCompanion
     Function({
   Value<int> amountTypeId,
   required String title,
+  Value<int> amountTypeIconId,
 });
 typedef $$AmountTypesTableUpdateCompanionBuilder = AmountTypesCompanion
     Function({
   Value<int> amountTypeId,
   Value<String> title,
+  Value<int> amountTypeIconId,
 });
 
 final class $$AmountTypesTableReferences
@@ -528,6 +574,10 @@ class $$AmountTypesTableFilterComposer
   ColumnFilters<String> get title => $composableBuilder(
       column: $table.title, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<int> get amountTypeIconId => $composableBuilder(
+      column: $table.amountTypeIconId,
+      builder: (column) => ColumnFilters(column));
+
   Expression<bool> walletsRefs(
       Expression<bool> Function($$WalletsTableFilterComposer f) f) {
     final $$WalletsTableFilterComposer composer = $composerBuilder(
@@ -565,6 +615,10 @@ class $$AmountTypesTableOrderingComposer
 
   ColumnOrderings<String> get title => $composableBuilder(
       column: $table.title, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get amountTypeIconId => $composableBuilder(
+      column: $table.amountTypeIconId,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$AmountTypesTableAnnotationComposer
@@ -581,6 +635,9 @@ class $$AmountTypesTableAnnotationComposer
 
   GeneratedColumn<String> get title =>
       $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<int> get amountTypeIconId => $composableBuilder(
+      column: $table.amountTypeIconId, builder: (column) => column);
 
   Expression<T> walletsRefs<T extends Object>(
       Expression<T> Function($$WalletsTableAnnotationComposer a) f) {
@@ -629,18 +686,22 @@ class $$AmountTypesTableTableManager extends RootTableManager<
           updateCompanionCallback: ({
             Value<int> amountTypeId = const Value.absent(),
             Value<String> title = const Value.absent(),
+            Value<int> amountTypeIconId = const Value.absent(),
           }) =>
               AmountTypesCompanion(
             amountTypeId: amountTypeId,
             title: title,
+            amountTypeIconId: amountTypeIconId,
           ),
           createCompanionCallback: ({
             Value<int> amountTypeId = const Value.absent(),
             required String title,
+            Value<int> amountTypeIconId = const Value.absent(),
           }) =>
               AmountTypesCompanion.insert(
             amountTypeId: amountTypeId,
             title: title,
+            amountTypeIconId: amountTypeIconId,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (
@@ -656,7 +717,8 @@ class $$AmountTypesTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (walletsRefs)
-                    await $_getPrefetchedData(
+                    await $_getPrefetchedData<AmountType, $AmountTypesTable,
+                            Wallet>(
                         currentTable: table,
                         referencedTable:
                             $$AmountTypesTableReferences._walletsRefsTable(db),

@@ -26,24 +26,24 @@ class Wallets extends Table {
 class AmountTypes extends Table {
   IntColumn get amountTypeId => integer().autoIncrement()();
   TextColumn get title => text().withLength(min: 1, max: 50)();
+  IntColumn get amountTypeIconId => integer().withDefault(const Constant(1))();
 }
 
 @DriftDatabase(tables: [Wallets, AmountTypes])
 class AppDatabase extends _$AppDatabase {
   @override
-  // データベースのスキーマバージョンを返す。現在は1。
   int get schemaVersion => 1;
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (m) async {
           await m.createAll();
           final database = AppDatabase();
-          await into(database.amountTypes)
-              .insert(const AmountType(amountTypeId: 0, title: "wallet"));
-          await into(database.amountTypes)
-              .insert(const AmountType(amountTypeId: 1, title: "bank"));
-          await into(database.amountTypes)
-              .insert(const AmountType(amountTypeId: 2, title: "card"));
+          await into(database.amountTypes).insert(const AmountType(
+              amountTypeId: 0, title: "wallet", amountTypeIconId: 1));
+          await into(database.amountTypes).insert(const AmountType(
+              amountTypeId: 1, title: "bank", amountTypeIconId: 2));
+          await into(database.amountTypes).insert(const AmountType(
+              amountTypeId: 2, title: "card", amountTypeIconId: 3));
         },
         // onUpgrade: (m, from, to) async {
         //   if (from == 1) {
