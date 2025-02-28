@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:hackathon_vol13/database/wallet.dart';
 
-class AddTabPage extends StatelessWidget {
+class AddTabPage extends StatefulWidget {
+  final AppDatabase database;
+  AddTabPage({super.key, required this.database});
+
+  @override
+  State<AddTabPage> createState() => _AddTabPageState();
+}
+
+class _AddTabPageState extends State<AddTabPage> {
+  final _formKey = GlobalKey<FormState>();
+  String title = '';
+  List<bool> isSelected = [true, false, false];
+
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             const Text(
@@ -16,10 +30,35 @@ class AddTabPage extends StatelessWidget {
               decoration: const InputDecoration(
                 labelText: 'タブ名',
               ),
+              onChanged: (value) {
+                title = value;
+              },
             ),
+            const SizedBox(height: 20),
+            ToggleButtons(
+                isSelected: isSelected,
+                borderRadius: BorderRadius.circular(8.0),
+                selectedColor: Colors.white,
+                fillColor: Colors.blue,
+                onPressed: (index) {
+                  setState(() {
+                    for (int i = 0; i < isSelected.length; i++) {
+                      isSelected[i] = i == index;
+                    }
+                  });
+                },
+                children: const [
+                  Icon(Icons.wallet),
+                  Icon(Icons.savings_outlined),
+                  Icon(Icons.credit_card),
+                ]),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                if (_formKey.currentState!.validate()) {
+                  int index = isSelected.indexWhere((element) => element);
+                  createAmountType(widget.database, title, index + 1);
+                  Navigator.pop(context);
+                }
               },
               child: const Text('追加'),
             ),

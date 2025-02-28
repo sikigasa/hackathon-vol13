@@ -82,7 +82,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               tabIndex: index,
             ),
           ),
-          AddTabPage(),
+          AddTabPage(
+            database: widget.database,
+          ),
         ],
       ),
     );
