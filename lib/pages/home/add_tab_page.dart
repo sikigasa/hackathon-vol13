@@ -44,28 +44,31 @@ class _AddTabPageState extends State<AddTabPage> {
               },
             ),
             const SizedBox(height: 20),
-            ToggleButtons(
-              isSelected: isSelected,
-              borderRadius: BorderRadius.circular(8.0),
-              selectedColor: Colors.white,
-              fillColor: Colors.blue,
-              onPressed: (index) {
-                setState(() {
-                  for (int i = 0; i < isSelected.length; i++) {
-                    isSelected[i] = i == index;
-                  }
-                });
-              },
-              children: const [
-                Icon(Icons.wallet),
-                Icon(Icons.savings_outlined),
-                Icon(Icons.credit_card),
-                Icon(Icons.attach_money),
-                Icon(Icons.account_balance_wallet),
-                Icon(Icons.money),
-                Icon(Icons.euro),
-                Icon(Icons.currency_exchange),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: ToggleButtons(
+                isSelected: isSelected,
+                borderRadius: BorderRadius.circular(8.0),
+                selectedColor: Colors.white,
+                fillColor: Colors.blue,
+                onPressed: (index) {
+                  setState(() {
+                    for (int i = 0; i < isSelected.length; i++) {
+                      isSelected[i] = i == index;
+                    }
+                  });
+                },
+                children: const [
+                  Icon(Icons.wallet),
+                  Icon(Icons.savings_outlined),
+                  Icon(Icons.credit_card),
+                  Icon(Icons.attach_money),
+                  Icon(Icons.account_balance_wallet),
+                  Icon(Icons.money),
+                  Icon(Icons.euro),
+                  Icon(Icons.currency_exchange),
+                ],
+              ),
             ),
             ElevatedButton(
               onPressed: () {
