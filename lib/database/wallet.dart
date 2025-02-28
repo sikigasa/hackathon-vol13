@@ -141,8 +141,9 @@ LazyDatabase _openConnection() {
   });
 }
 
-Future createAmountType(AppDatabase db, String title) {
+Future createAmountType(AppDatabase db, String title, int amountTypeIconId) {
   return db.into(db.amountTypes).insert(
-        AmountTypesCompanion.insert(title: title),
+        AmountTypesCompanion.insert(
+            title: title, amountTypeIconId: Value(amountTypeIconId)),
       );
 }
