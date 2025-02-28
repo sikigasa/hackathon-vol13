@@ -44,6 +44,11 @@ class _AddTabPageState extends State<AddTabPage> {
               },
             ),
             const SizedBox(height: 20),
+            const Text(
+              "タブのアイコン",
+              textAlign: TextAlign.left,
+            ),
+            const SizedBox(height: 10),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: ToggleButtons(
@@ -70,6 +75,7 @@ class _AddTabPageState extends State<AddTabPage> {
                 ],
               ),
             ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
