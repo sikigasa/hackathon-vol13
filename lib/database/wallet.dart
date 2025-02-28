@@ -39,11 +39,11 @@ class AppDatabase extends _$AppDatabase {
           await m.createAll();
           final database = AppDatabase();
           await into(database.amountTypes).insert(const AmountType(
-              amountTypeId: 0, title: "wallet", amountTypeIconId: 1));
+              amountTypeId: 0, title: "財布", amountTypeIconId: 1));
           await into(database.amountTypes).insert(const AmountType(
-              amountTypeId: 1, title: "bank", amountTypeIconId: 2));
+              amountTypeId: 1, title: "貯金", amountTypeIconId: 2));
           await into(database.amountTypes).insert(const AmountType(
-              amountTypeId: 2, title: "card", amountTypeIconId: 3));
+              amountTypeId: 2, title: "銀行", amountTypeIconId: 3));
         },
         // onUpgrade: (m, from, to) async {
         //   if (from == 1) {
