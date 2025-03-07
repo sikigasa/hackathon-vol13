@@ -18,6 +18,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('金額入力')),
+      resizeToAvoidBottomInset: true,
       floatingActionButton: FutureBuilder<String?>(
         future: SharedPreferences.getInstance().then((prefs) {
           return prefs.getString('GEMINI_API_KEY');
@@ -48,7 +49,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           }
         },
       ),
-      body: InputForm(price: price, database: widget.database),
+      body: SingleChildScrollView(
+        child: InputForm(price: price, database: widget.database),
+      ),
     );
   }
 }
@@ -97,15 +100,6 @@ class _InputFormState extends State<InputForm> {
 
   @override
   Widget build(BuildContext context) {
-    // Future<List<String>> getAmountTypes() async {
-    //   final items =
-    //       await widget.database.select(widget.database.amountTypes).get();
-    //   List<String> itemNames = items
-    //       .map((amount) => amount.title.toString()) // 文字列に変換
-    //       .toList();
-    //   print("priceType: $itemNames");
-    //   return itemNames;
-    // }
     return Form(
       key: _formKey,
       child: Padding(
@@ -160,6 +154,10 @@ class _InputFormState extends State<InputForm> {
             ),
             const SizedBox(height: 20),
 
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('項目', style: TextStyle(fontSize: 15)),
+            ),
             // ドロップダウン
             FutureBuilder<List<String>>(
               future: getAllAmountTypes(widget.database).then((amountTypes) {
@@ -196,10 +194,6 @@ class _InputFormState extends State<InputForm> {
                     selectedDropdownValue = snapshot.data!.first;
                   }
                   return DropdownButtonFormField(
-                    decoration: const InputDecoration(
-                      labelText: '項目',
-                      hintText: 'Enter item',
-                    ),
                     value: selectedDropdownValue,
                     onChanged: (String? newValue) {
                       setState(() {
