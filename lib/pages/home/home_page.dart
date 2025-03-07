@@ -21,7 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late TabController _tabController;
-  int _tabLength = 4;
+  int _tabLength = 5;
   List<AmountIcon> amountIcons = [
     const AmountIcon(amountTypeImageId: 1, amountTypeIconName: Icons.wallet),
     const AmountIcon(
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     if (!mounted) return;
 
     setState(() {
-      _tabLength = amountTypes.length + 1; // デフォルトの1つのタブを追加
+      _tabLength = amountTypes.length + 2; // デフォルトの2つのタブを追加
       _tabController.dispose();
       _tabController = TabController(length: _tabLength, vsync: this);
     });
@@ -58,13 +58,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('資金管理'),
+        title: const Text(''),
         bottom: TabBar(
           isScrollable: true,
           controller: _tabController,
           tabs: [
+            const Tab(icon: Icon(Icons.home)),
             ...List.generate(
-              _tabLength - 1,
+              _tabLength - 2,
               (index) => Tab(icon: Icon(amountIcons[index].amountTypeIconName)),
             ),
             const Tab(icon: Icon(Icons.add_rounded)),
@@ -75,8 +76,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       body: TabBarView(
         controller: _tabController,
         children: [
+          WalletPage(database: widget.database, tabIndex: -1),
           ...List.generate(
-            _tabLength - 1,
+            _tabLength - 2,
             (index) => WalletPage(
               database: widget.database,
               tabIndex: index,

@@ -41,8 +41,16 @@ class WalletCard extends StatelessWidget {
     // .insert(AmountType(amountTypeId: 0, title: "wallet"));
     // insertWallet(database, Wallet(walletId: 0, amount: 1000, amountTypeId: 0));
     Future<int> getBalance() async {
-      var balances = await getAllWalletsByAmountTypeId(database, tabIndex);
-      int totalAmount = balances.fold(0, (acc, wallet) => acc + wallet.amount);
+      int totalAmount = -1;
+      if (tabIndex == -1) {
+        var balances = await getAllWallets(database);
+        totalAmount = balances.fold(0, (acc, wallet) => acc + wallet.amount);
+        return totalAmount;
+      } else {
+        var balances = await getAllWalletsByAmountTypeId(database, tabIndex);
+        totalAmount = balances.fold(0, (acc, wallet) => acc + wallet.amount);
+      }
+
       return totalAmount;
     }
 
