@@ -78,7 +78,7 @@ class _AddTabPageState extends State<AddTabPage> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
+                if (_formKey.currentState!.validate() && title.isNotEmpty) {
                   int index = isSelected.indexWhere((element) => element);
                   createAmountType(widget.database, title, index + 1);
                   Navigator.pop(context);
