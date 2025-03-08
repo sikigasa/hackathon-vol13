@@ -28,6 +28,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         amountTypeImageId: 2, amountTypeIconName: Icons.savings_outlined),
     const AmountIcon(
         amountTypeImageId: 3, amountTypeIconName: Icons.credit_card),
+    const AmountIcon(
+        amountTypeImageId: 4, amountTypeIconName: Icons.attach_money),
+    const AmountIcon(
+        amountTypeImageId: 5, amountTypeIconName: Icons.account_balance_wallet),
+    const AmountIcon(amountTypeImageId: 6, amountTypeIconName: Icons.money),
+    const AmountIcon(amountTypeImageId: 7, amountTypeIconName: Icons.euro),
+    const AmountIcon(
+        amountTypeImageId: 8, amountTypeIconName: Icons.currency_exchange),
   ];
 
   @override
