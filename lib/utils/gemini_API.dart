@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:hackathon_vol13/utils/convertJpeg.dart';
+import 'package:hackathon_vol13/utils/convert_jpeg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 SharedPreferences? prefs;

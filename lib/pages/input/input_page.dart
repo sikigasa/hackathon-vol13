@@ -41,6 +41,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                 );
                 if (price != null) {
                   print('Received Price: $price');
+                  setState(
+                      () {}); // Trigger a rebuild to pass the price to InputForm
                 }
               },
               backgroundColor: Colors.blue,
@@ -76,6 +78,15 @@ class _InputFormState extends State<InputForm> {
   String? selectedDropdownValue; // 選択された値を保持
   Map<String, int> amountTypesMap = {};
 
+  @override
+  void initState() {
+    super.initState();
+    if (widget.price != null) {
+      amountEditingController.text = widget.price!;
+      _amount = int.tryParse(widget.price!) ?? 0;
+    }
+  }
+
   Future _getDate(BuildContext context) async {
     final initialDate = DateTime.now();
 
@@ -95,6 +106,7 @@ class _InputFormState extends State<InputForm> {
   @override
   void dispose() {
     dateEditingController.dispose();
+    amountEditingController.dispose();
     super.dispose();
   }
 

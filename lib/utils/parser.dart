@@ -53,7 +53,7 @@ parser(String input) {
       print('位置: $position');
       print('バッファ: $buffer');
   }
-  print("文字解析出力: " + result.value);
+  print("文字解析出力: ${result.value}");
   String res = result.value.toString();
   return res;
 }

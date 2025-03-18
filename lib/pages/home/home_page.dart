@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hackathon_vol13/pages/home/add_tab_page.dart';
 import 'package:hackathon_vol13/pages/home/wallet.dart';
 import 'package:hackathon_vol13/database/wallet.dart';
-import 'package:hackathon_vol13/utils/parser.dart';
+// import 'package:hackathon_vol13/utils/parser.dart';
 
 class AmountIcon {
   final int amountTypeImageId;
